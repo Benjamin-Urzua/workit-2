@@ -1,0 +1,43 @@
+/** @type {import('tailwindcss').Config} */
+
+const { nextui } = require("@nextui-org/react")
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {
+      colors: {
+        "Primary": "#890bff",
+        "PrimaryTransparent": "rgba(127, 17, 224, 0.2)",
+        "PrimarySemiTransparent": "rgba(127, 17, 224, 0.5)",
+        "Secondary": "#7715d3",
+        "Common": "#777777",
+        "SecondCommon": "#444444",
+        "Transparent": "rgba(255, 255, 255, 0.6)"
+      }
+    },
+  },
+  darkMode: "class",
+  plugins: [nextui({
+    themes: {
+      light: {
+        colors: {
+          primary: {
+            DEFAULT: "#DB4A39",
+            foreground: "#000000",
+          },
+          focus: "#DB4A39",
+          default: {
+            DEFAULT: "#3B5998",
+            foreground: "#000000",
+          },
+        },
+      },
+    },
+  })],
+}
+
