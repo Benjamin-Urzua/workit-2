@@ -71,22 +71,22 @@ export const RegisterCliente = () => {
 
 
     return (
-        <main className="container flex justify-between flex-row  p-3">
+        <main className="container flex justify-between flex-col px-5 lg:flex-row gap-4 m-auto">
             <div className="basis-8/12 text-center pt-10">
-                <span className="mb-4 flex flex-col">
+                <span className="mb-4 px-4 md:px-0 flex flex-col">
                     <h1 className="text-[2.5rem] font-[500]">Bienvenido a Work<span className="text-Primary">It.</span></h1>
                     <h4 className="text-[1.25rem] font-[500] mb-10">¡Regístrate con nosotros para obtener al profesional que necesitas!</h4>
                     <p className="text-[1.10rem] font-[600]">Todos estos datos serán necesarios para: </p>
-                    <span className="text-justify place-self-center">
+                    <span className="text-start place-self-center">
                         <li>Ofrecerle una experiencia personalizada dentro de WorkIt.</li>
                         <li>Entregarle seguridad dentro de WorkIt.</li>
                         <li>Cubrirle a nivel legal con el uso de WorkIt.</li>
                     </span>
-                    <Link to='/' className="text-Primary text-sm font-semibold place-self-start ml-24 mt-10">Volver</Link>
+                    <Link to='/' className="text-Primary text-sm font-semibold place-self-center lg:place-self-start  mt-10">Volver</Link>
                 </span>
 
             </div>
-            <form className=" gap-3 basis-5/12 pt-20 col-span-6 flex flex-col ">
+            <form className=" gap-3 basis-8/12 lg:basis-5/12 pt-3 lg:pt-20 col-span-6 flex flex-col ">
                 <div className="grid grid-cols-2 gap-3">
                     <div >
                         <Input variant="underlined"

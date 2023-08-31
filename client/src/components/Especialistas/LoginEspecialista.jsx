@@ -17,7 +17,7 @@ export const LoginEspecialista = () => {
                 <h4 className="text-[1.25rem] font-[500] text-center">¡Inicia sesión para salvarle el día a tus clientes!</h4>
             </span>
 
-            <div className="flex px-[28rem] flex-col gap-4">
+            <div className="flex px-[5rem] md:px-[10rem] lg:px-[23rem] flex-col gap-4">
                 <Input type="email" placeholder="Correo electrónico" color="secondary" variant="underlined" />
                 <Input
 
@@ -42,8 +42,8 @@ export const LoginEspecialista = () => {
                     <a href="#" className="text-Primary place-self-center">¿Olvidaste tu contraseña?</a>
                     <span className="place-self-center">¿No tienes cuenta? <Link to="/especialistas/register" className="text-Primary">Regístrate</Link></span>
                 </div>
-                <Button color="primary" variant="ghost" className="w-6/12 place-self-center  hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faGoogle} /> Continuar con Google</Button>
-                <Button color="default" variant="ghost" className="w-6/12 place-self-center hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faFacebookF} /> Continuar con Google</Button>
+                <Button color="primary" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center  hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faGoogle} /> Continuar con Google</Button>
+                <Button color="default" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faFacebookF} /> Continuar con Google</Button>
                 <Link to='/' className="text-Primary text-sm font-semibold">Volver</Link>
             </div>
         </form>

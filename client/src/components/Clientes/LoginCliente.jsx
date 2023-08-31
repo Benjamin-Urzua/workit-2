@@ -42,8 +42,8 @@ export const LoginCliente = () => {
                     <a href="#" className="text-Primary place-self-center">¿Olvidaste tu contraseña?</a>
                     <span className="place-self-center">¿No tienes cuenta? <Link to="/clientes/register" className="text-Primary">Regístrate</Link></span>
                 </div>
-                <Button color="primary" variant="ghost" className="w-full  md:w-6/12 lg:w-8/12 place-self-center  hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faGoogle} /> <span className=" hidden sm:block">Continuar con Google</span></Button>
-                <Button color="default" variant="ghost" className="w-full  md:w-6/12 lg:w-8/12 place-self-center hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faFacebookF} /> <span className=" hidden sm:block">Continuar con Facebook</span></Button>
+                <Button color="primary" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center  hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faGoogle} /> <span className=" hidden sm:block">Continuar con Google</span></Button>
+                <Button color="default" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faFacebookF} /> <span className=" hidden sm:block">Continuar con Facebook</span></Button>
                 <Link to='/' className="text-Primary text-sm font-semibold">Volver</Link>
             </div>
         </form>
