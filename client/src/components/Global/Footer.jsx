@@ -1,7 +1,7 @@
 export const Footer = () => {
     return (
-        <footer>
-            <div className="flex md:justify-between justify-center px-10 md:px-32 py-5 font-['Robot', sans-serif] grid-flow-col">
+        <footer className="">
+            <div className="flex md:justify-between justify-center px-10 md:px-32 py-5 font-['Robot', sans-serif] grid-flow-col border-t-1.5">
                 <div className="flex flex-wrap justify-center text-center md:text-left md:flex-col space-x-2 ">
                     <h1 className="text-[24px] basis-11/12 md:basis-0 mb-2 font-[700] ml-1">Work<span className="text-Primary">It.</span></h1>
                     

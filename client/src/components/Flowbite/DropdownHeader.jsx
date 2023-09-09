@@ -6,7 +6,7 @@ import { useState } from "react";
 export const DropdownHeader = ({ label, linkCliente, linkEspecialista }) => {
   
   const [isOpen, setOpen] = useState(false)
-  console.log(isOpen)
+
   const openOnMouseOver = () => {
     if (isOpen) {
       setOpen(false)

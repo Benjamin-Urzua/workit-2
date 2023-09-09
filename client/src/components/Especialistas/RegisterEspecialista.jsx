@@ -67,6 +67,30 @@ export const RegisterEspecialista = () => {
         )
     }, [])
 
+    const [cedIdentidadPlaceholder, setCedIdentidadPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivo...</span>)
+    const [certResidenciaPlaceholder, setcertResidenciaPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivo...</span>)
+    const [titProfesionalesPlaceholder, setTitProfesionalesPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivos...</span>)
+    const [certAntecedentesPlaceholder, setcedAntecedentesPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivo...</span>)
+
+
+    const handleFileInputs = ((tipo) => {
+        switch (tipo) {
+            case 'identidad':
+                setCedIdentidadPlaceholder(<span className='absolute text-green-600 font-normal text-sm'>Archivo subido</span>)
+                break;
+            case 'residencia':
+                setcertResidenciaPlaceholder(<span className='absolute text-green-600 font-normal text-sm'>Archivo subido</span>)
+                break;
+            case 'titulos':
+                setTitProfesionalesPlaceholder(<span className='absolute text-green-600 font-normal text-sm'>Archivos subidos</span>)
+                break;
+            case 'antecedentes':
+                setcedAntecedentesPlaceholder(<span className='absolute text-green-600 font-normal text-sm'>Archivo subido</span>)
+                break;
+        }
+        
+
+    })
 
     return (
         <main className="container flex justify-between flex-col px-5 lg:flex-row gap-4 m-auto">
@@ -258,14 +282,16 @@ export const RegisterEspecialista = () => {
                                     name="fl_cedulaIdentidad"
                                     variant="underlined"
                                     type="file"
+                                    onChange={() => handleFileInputs('identidad')}
                                     endContent={
                                         <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
-                                            <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
+                                            <span><FontAwesomeIcon className="text-l text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
                                         </Button>
 
                                     }
                                     startContent={
-                                        <span className="absolute font-normal text-foreground-500 text-sm">Subir archivo...</span>
+                                        cedIdentidadPlaceholder
+
                                     }
                                     style={{ opacity: 0 }}
                                 />
@@ -279,6 +305,7 @@ export const RegisterEspecialista = () => {
                                     variant="underlined"
                                     type="file"
                                     multiple
+                                    onChange={() => handleFileInputs('titulos')}
                                     endContent={
                                         <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
                                             <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
@@ -286,7 +313,7 @@ export const RegisterEspecialista = () => {
 
                                     }
                                     startContent={
-                                        <span className="absolute font-normal text-foreground-500 text-sm">Subir archivos...</span>
+                                        titProfesionalesPlaceholder
                                     }
                                     style={{ opacity: 0 }}
                                 />
@@ -325,6 +352,7 @@ export const RegisterEspecialista = () => {
                                     name="fl_certResidencia"
                                     variant="underlined"
                                     type="file"
+                                    onChange={() => handleFileInputs('residencia')}
                                     endContent={
                                         <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
                                             <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
@@ -332,18 +360,19 @@ export const RegisterEspecialista = () => {
 
                                     }
                                     startContent={
-                                        <span className="absolute font-normal text-foreground-500 text-sm">Subir archivo...</span>
+                                        certResidenciaPlaceholder
                                     }
                                     style={{ opacity: 0 }}
                                 />
                             </span>
                             <span>
-                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de residencia</label>
+                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de antecedentes</label>
                                 <Input
-                                    id="fl_certResidencia"
-                                    name="fl_certResidencia"
+                                    id="fl_certAntecedentes"
+                                    name="fl_certAntecedentes"
                                     variant="underlined"
                                     type="file"
+                                    onChange={() => handleFileInputs('antecedentes')}
                                     endContent={
                                         <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
                                             <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
@@ -351,7 +380,7 @@ export const RegisterEspecialista = () => {
 
                                     }
                                     startContent={
-                                        <span className="absolute font-normal text-foreground-500 text-sm">Subir archivo...</span>
+                                        certAntecedentesPlaceholder
                                     }
                                     style={{ opacity: 0 }}
                                 />
@@ -372,7 +401,7 @@ export const RegisterEspecialista = () => {
                             <Button color="secondary" className="w-10/12 place-self-center mb-2">Registrarse</Button>
                             <span className="place-self-center">¿Ya estás registrado? <Link to="/especialistas/login" className="text-Primary">Inicia sesión</Link></span>
                         </div>
-                        
+
                     </Tab>
                 </Tabs>
 
