@@ -8,6 +8,7 @@ import { RegisterEspecialista } from "./components/Especialistas/RegisterEspecia
 import { Home } from "./components/Home/Home"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { ResultadosBusqueda } from "./components/Home/ResultadosBusqueda"
+import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/especialistas/register" element={<RegisterEspecialista />} />
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
+          <Route path="/clientes/ConfiguracionClientes" element={<ConfiguracionCliente/>}></Route>
         </Routes>
       </BrowserRouter>
     </main>
