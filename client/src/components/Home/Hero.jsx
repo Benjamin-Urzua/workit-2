@@ -47,12 +47,50 @@ export const Hero = () => {
 
 
       </section>
+      {/* Sección de Categorías y Acciones */}
+      <div>
+        <div className="container mx-auto mt-8">
+
+          <div className="flex flex-wrap justify-center my-8">
+            <h2 className="text-2xl font-bold text-center mb-4 w-full">Nuestras Categorías</h2>
+
+            <div className="bg-gray-100  rounded-md p-4 m-2 min-w-min">
+
+
+              <div className="flex space-x-4">
+                <a href="/Gasfiter" className="text-sm  hover:underline">Gásfiter</a>
+                <a href="/Albanil" className="text-sm  hover:underline">Albañil</a>
+                <a href="/Mecanico" className="text-sm  hover:underline">Mecanico</a>
+                <a href="/Cerrajero" className="text-sm  hover:underline">Cerrajero</a>
+                <a href="/Peluquero" className="text-sm hover:underline">Peluquero</a>
+                <a href="/pintor" className="text-sm hover:underline">Pintor</a>
+                <a href="/electricista" className="text-sm hover:underline">Electricista</a>
+                <a href="/carpintero" className="text-sm hover:underline">Carpintero</a>
+                <a href="/gas" className="text-sm hover:underline">Gas</a>
+                <a href="/decorador" className="text-sm hover:underline">Decorador</a>
+                <a href="/decorador" className="text-sm hover:underline">Arquitecto</a>
+                <a href="/decorador" className="text-sm hover:underline">Informatica</a>
+                <a href="/decorador" className="text-sm hover:underline">Mudanzas</a>
+                <a href="/decorador" className="text-sm hover:underline">Mascotas</a>
+                <a href="/decorador" className="text-sm hover:underline">Jardinero</a>
+
+              </div>
+              <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <hr className="border-t border-gray-300 my-4" />
+
       {/* Sección WorkersHighlight */}
       <WorkersHighlight />
 
     </>
   )
 }
+
+
 
 const WorkersHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -114,7 +152,7 @@ const WorkersHighlight = () => {
           {[0, 1, 2].map(offset => {
             const workerIndex = (currentIndex + offset) % workers.length;
             return (
-              <div key={workerIndex} className="flex items-center p-5 rounded-lg shadow-md">
+              <div key={workerIndex} className="flex items-center p-5 rounded-lg shadow-md w-1/3">
                 <div className="mr-5 flex-shrink-0">
                   <Avatar className="w-20 h-20 text-large" src={workers[workerIndex].avatarUrl} alt={workers[workerIndex].name} size="large" />
                 </div>
