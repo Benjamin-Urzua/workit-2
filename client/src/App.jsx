@@ -9,6 +9,7 @@ import { Home } from "./components/Home/Home"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { ResultadosBusqueda } from "./components/Home/ResultadosBusqueda"
 import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
+import { NotFoundPage} from "./components/Global/NotFoundPage"
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/especialistas/register" element={<RegisterEspecialista />} />
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
+          <Route path="/error" element={<NotFoundPage />} />
           <Route path="/clientes/ConfiguracionClientes" element={<ConfiguracionCliente/>}></Route>
         </Routes>
       </BrowserRouter>
