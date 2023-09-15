@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { ResultadosBusqueda } from "./components/Home/ResultadosBusqueda"
 import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
 import { NotFoundPage} from "./components/Global/NotFoundPage"
+import { SesionExpirada } from "./components/Global/SesionExpirada"
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
           <Route path="/error" element={<NotFoundPage />} />
+          <Route path="/sesionexpirada" element={<SesionExpirada />} />
           <Route path="/clientes/ConfiguracionClientes" element={<ConfiguracionCliente/>}></Route>
         </Routes>
       </BrowserRouter>
