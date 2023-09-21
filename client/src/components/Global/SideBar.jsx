@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faIdCard, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
-import { Avatar } from 'flowbite-react'
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import { Link } from 'react-router-dom';
 
@@ -17,17 +16,7 @@ export const SideBar = ({visible, mostrarSideBar}) => {
   return (
     <nav className={visible + ' grid content-start md:hidden text-Common  w-6/12 h-screen absolute inset-y-0 right-0 z-20 bg-white'}>
       <FontAwesomeIcon className="text-[25px] hover:text-Primary cursor-pointer p-3" onClick={mostrarSideBar} icon={faXmark} />
-      <Avatar className='py-3 border-none' size='lg' rounded>
-        <div className="space-y-1 font-medium dark:text-white">
-          <div>
-            Jese Leos
-          </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Joined in August 2014
-          </div>
-        </div>
-      </Avatar>
-
+   {/*poner avatar */}
       <Accordion itemClasses={accordionClasses} isCompact>
         <AccordionItem key="1" aria-label="Iniciar sesión" startContent={<FontAwesomeIcon icon={faRightToBracket} />} title="Iniciar sesión">
           <Button color='none' className='w-full hover:text-Primary justify-start border-none'><Link to='/clientes/login'>Como cliente</Link></Button>

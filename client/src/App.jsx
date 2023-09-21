@@ -11,6 +11,7 @@ import { ResultadosBusqueda } from "./components/Home/ResultadosBusqueda"
 import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
 import { NotFoundPage} from "./components/Global/NotFoundPage"
 import { SesionExpirada } from "./components/Global/SesionExpirada"
+import { Admin } from "./components/Admin/Admin"
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/clientes/login" element={<LoginCliente />} />
           <Route path="/clientes/register" element={<RegisterCliente />} />
           <Route path="/especialistas/login" element={<LoginEspecialista />} />

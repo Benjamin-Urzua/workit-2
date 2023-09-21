@@ -44,7 +44,7 @@ export const LoginCliente = () => {
                 </div>
                 <Button color="primary" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center  hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faGoogle} /> <span className=" hidden sm:block">Continuar con Google</span></Button>
                 <Button color="default" variant="ghost" className="w-full md:w-6/12 lg:w-8/12 place-self-center hover:text-white text-sm"><FontAwesomeIcon className="text-lg" icon={faFacebookF} /> <span className=" hidden sm:block">Continuar con Facebook</span></Button>
-                <Link to='/' className="text-Primary text-sm font-semibold">Volver</Link>
+                <Link to='/' className="text-Primary text-sm font-semibold hover:underline">Volver</Link>
             </div>
         </form>
     )
