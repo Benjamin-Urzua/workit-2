@@ -1,13 +1,14 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react"
 import { Link } from "react-router-dom"
-import { setGlobalState} from "../../../global_states"
+import { useGlobalState ,setGlobalState} from "../../../global_states"
 import { useState } from "react"
 
 export const NavBar = () => {
-
+    const [vista] = useGlobalState("vistaAdmin")
     const handleVista = (e, v) => {
         e.preventDefault()
-        setGlobalState("vistaAdmin", v)
+        
+        setGlobalState("vistaAdmin", v) // vistaAdmin:"cliente"        vistaAdmin:"profesionales"
     }
 
 
@@ -15,23 +16,51 @@ export const NavBar = () => {
     return (
         <Navbar position="static">
             <NavbarBrand>
-                <span className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.<small className="text-Primary text-sm ">Admin</small></span></span>
+                <Link to="/"><span className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.<small className="text-Primary text-sm ">Admin</small></span></span></Link>
             </NavbarBrand>
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarItem>
-                    <Link onClick={(e) => handleVista(e,"cliente")}>
+                {
+                    (vista == "cliente")
+                    ?
+                    <Link className="text-Primary" onClick={(e) => handleVista(e,"cliente")}>
                         Clientes
                     </Link>
+                    :
+                    <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e,"cliente")}>
+                        Clientes
+                    </Link>
+                }
+                    
                 </NavbarItem>
                 <NavbarItem>
-                    <Link onClick={(e) => handleVista(e,"profesionales")} to="#" aria-current="page">
+                {
+                    (vista == "profesionales")
+                    ?
+                   
+                    <Link className="text-Primary" onClick={(e) => handleVista(e,"profesionales")} to="#" aria-current="page">
                         Profesionales
                     </Link>
+                    :
+                    <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e,"profesionales")} to="#" aria-current="page">
+                        Profesionales
+                    </Link>
+                }
                 </NavbarItem>
                 <NavbarItem>
-                    <Link onClick={(e) => handleVista(e,"reportes")} to="#">
+
+                {
+                    (vista !== "profesionales" && vista !== "cliente")
+                    ?
+                   
+                    <Link className="text-Primary" onClick={(e) => handleVista(e,"reportes")} to="#">
                         Reportes
                     </Link>
+                    :
+                    <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e,"reportes")} to="#">
+                        Reportes
+                    </Link>
+                }
                 </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
