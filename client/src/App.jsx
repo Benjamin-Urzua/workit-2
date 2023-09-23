@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/buscar" element={<ResultadosBusqueda />} />
           <Route path="/error" element={<NotFoundPage />} />
           <Route path="/sesionexpirada" element={<SesionExpirada />} />
-          <Route path="/clientes/ConfiguracionClientes" element={<ConfiguracionCliente/>}></Route>
+          <Route path="/clientes/configuracionClientes" element={<ConfiguracionCliente/>}></Route>
         </Routes>
       </BrowserRouter>
     </main>
