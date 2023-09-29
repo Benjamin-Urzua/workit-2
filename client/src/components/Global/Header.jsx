@@ -1,16 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faChevronDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { DropdownHeader } from '../Flowbite/DropdownHeader'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Accordion, AccordionItem, Listbox, ListboxItem } from "@nextui-org/react";
+import { Navbar, Avatar, NavbarBrand, NavbarContent, DropdownMenu, DropdownItem, Dropdown, DropdownTrigger, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Accordion, AccordionItem, Listbox, ListboxItem } from "@nextui-org/react";
 import { Topbar } from './Topbar'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { redirect } from 'react-router-dom';
 
 
 export const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  //localStorage.clear()
+  //console.log(localStorage.getItem("userName"))
   return (
     <div className='relative z-10 '>
       <Topbar />
@@ -28,15 +30,43 @@ export const Header = () => {
 
 
         <NavbarContent className='hidden md:flex' justify="end">
-          <NavbarItem   className="hidden lg:flex">
-            <span className='mr-2'><DropdownHeader  linkCliente='/clientes/login' linkEspecialista='/especialistas/login' label='Iniciar sesión' /></span>
-          </NavbarItem>
-          <NavbarItem  >
-            <span><DropdownHeader  linkCliente='/clientes/register' linkEspecialista='/especialistas/register' label='Registrarse' /></span>
-          </NavbarItem>
+          {
+            (localStorage.getItem("userName") == null)
+              ?
+              (<><NavbarItem className="hidden lg:flex">
+                <span className='mr-2'><DropdownHeader linkCliente='/clientes/login' linkEspecialista='/especialistas/login' label='Iniciar sesión' /></span>
+              </NavbarItem>
+                <NavbarItem  >
+                  <span><DropdownHeader linkCliente='/clientes/register' linkEspecialista='/especialistas/register' label='Registrarse' /></span>
+                </NavbarItem></>)
+              :
+              (<NavbarItem  >
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      variant="light"
+                      endContent={ <FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon> }
+                      startContent={ <Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
+                    >
+                      {localStorage.getItem("userName")}
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions">
+                    <DropdownItem key="new">Mi cuenta</DropdownItem>
+                    <DropdownItem key="copy">Mi perfil</DropdownItem>
+                    <DropdownItem key="edit">Edit file</DropdownItem>
+                    <DropdownItem key="delete" className="text-danger" onClick={()=>{localStorage.clear(); window.location.reload();}} color="danger" startContent={<FontAwesomeIcon size='md' icon={faRightFromBracket}></FontAwesomeIcon>}>
+                      Cerrar sesión
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+                
+              </NavbarItem>)
+          }
+
         </NavbarContent>
 
-        <NavbarMenu> 
+        <NavbarMenu>
           <NavbarMenuItem >
             <Accordion showDivider={false} variant='light' isCompact>
               <AccordionItem key="1" aria-label="Accordion 1" title="Iniciar sesión">
@@ -66,7 +96,7 @@ export const Header = () => {
           <NavbarMenuItem className='text-md ml-2'>
             <Link to="/clientes/historialTrabajos">Historial</Link>
           </NavbarMenuItem>
-        
+
           <NavbarMenuItem className='text-md ml-2 '>
             <Link to="/clientes/configuracionClientes">Mi cuenta</Link>
           </NavbarMenuItem>

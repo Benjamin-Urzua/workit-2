@@ -2,7 +2,7 @@ import { Table, Pagination, TableHeader, TableColumn, TableBody, TableRow, Table
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPencil, faBan, faCircleUp, faChevronDown, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { columns, users } from "./data";
+import { columns, users } from "../../data/data";
 import { useCallback, useState, useMemo } from "react";
 
 const statusColorMap = {
