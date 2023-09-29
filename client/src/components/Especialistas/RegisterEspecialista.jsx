@@ -3,15 +3,109 @@ import { formatRut } from 'rutlib';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { v4 } from 'uuid'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { regiones, comunas, provincias } from "../../data/regiones";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import KeepAlive from 'react-activation';
 
 export const RegisterEspecialista = () => {
-    const [regiones, setRegiones] = useState([{}])
-    const [provincias, setProvincias] = useState([{}])
-    const [comunas, setComunas] = useState([{}])
 
+    const txt_nombres = useRef()
+    const txt_apellidos = useRef()
+    const txt_email = useRef()
+    const txt_contrasena = useRef()
+    const txt_telefono = useRef()
+    const txt_run = useRef()
+    const txt_region = useRef()
+    const txt_provincia = useRef()
+    const txt_comuna = useRef()
+    const txt_direccion = useRef()
+    const txt_rubro = useRef()
+    const txt_profesion = useRef()
+
+
+    const formRegister = useRef()
+    const redirect = useNavigate()
+
+    const register = async (e) => {
+        e.preventDefault()
+
+        const nombres = txt_nombres.current.value
+        const apellidos = txt_apellidos.current.value
+        const email = txt_email.current.value
+        const contrasena = txt_contrasena.current.value
+        const telefono = txt_telefono.current.value
+        const run = txt_run.current.value
+        const region = txt_region.current.value.slice(txt_region.current.value.indexOf(":") + 1)
+        const provincia = txt_provincia.current.value.slice(txt_provincia.current.value.indexOf(":") + 1)
+        const comuna = txt_comuna.current.value.slice(txt_comuna.current.value.indexOf(":") + 1)
+        const direccion = txt_direccion.current.value
+        const rubro = txt_rubro.current.value.slice(txt_rubro.current.value.indexOf(":") + 1)
+        const profesion = txt_profesion.current.value
+
+        const body = new FormData(formRegister.current)
+        body.append("nombres", nombres)
+        body.append("apellidos", apellidos)
+        body.append("email", email)
+        body.append("contrasena", contrasena)
+        body.append("telefono", telefono)
+        body.append("run", run)
+        body.append("region", region)
+        body.append("provincia", provincia)
+        body.append("comuna", comuna)
+        body.append("direccion", direccion)
+        body.append("rubro", rubro)
+        body.append("profesion", profesion)
+        body.delete("txt_rubro")
+        body.delete("txt_profesion")
+        await fetch('http://localhost:8080/especialistas/register', { method: 'POST', body: body, contentType: false, processData: false, })
+            .then(res => res.json().then(msg => {
+                const ReactSwal = withReactContent(Swal)
+
+                switch (msg["codigo"]) {
+                    case 1:
+                        ReactSwal.fire({
+                            icon: 'success',
+                            title: '¡Genial!',
+                            text: msg["msg"],
+                        }).then((result) => {
+                            if (result['isConfirmed']) {
+                                return redirect("/especialistas/login")
+                            }
+                        })
+                        break;
+                    case 2:
+                        ReactSwal.fire({
+                            icon: 'error',
+                            title: 'Problemas...',
+                            text: msg["msg"],
+                            footer: '<a href="/">Recuperar contraseña</a>'
+                        })
+                        break;
+                    case 3:
+                        ReactSwal.fire({
+                            icon: 'error',
+                            title: 'Problemas...',
+                            text: msg["msg"]
+                        })
+                        break;
+                    case 10:
+                        ReactSwal.fire({
+                            icon: 'error',
+                            title: 'Problemas...',
+                            text: msg["msg"],
+                        })
+                        break;
+                }
+            }))
+    }
+
+
+    const [comboProvincias, setComboProvincias] = useState([{}])
+    const [comboComunas, setComboComunas] = useState([{}])
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -19,32 +113,21 @@ export const RegisterEspecialista = () => {
 
     const [run, setRun] = useState("")
 
-    const fetchCombos = async (evt, tipo) => {
+    const cargarCombos = async (evt, tipo) => {
         const { target } = evt;
         const { value } = target;
 
 
         if (tipo == "provincia") {
             const key = value.slice(0, 2)
-            await fetch(`https://apis.digital.gob.cl/dpa/regiones/${key}/provincias`).then(
-                response => response.json()
-            ).then(
-                data => {
-                    setProvincias(data)
-
-                }
-            )
+            const data = provincias.filter(provincia => provincia.codigo_padre == key)
+            setComboProvincias(data)
         } else {
             const key = value.slice(0, 3)
-            await fetch(`https://apis.digital.gob.cl/dpa/provincias/${key}/comunas`).then(
-                response => response.json()
-            ).then(
-                data => {
-                    setComunas(data)
-                }
-            )
-        }
+            const data = comunas.filter(comuna => comuna.codigo_padre == key)
+            setComboComunas(data)
 
+        }
     }
 
 
@@ -56,16 +139,6 @@ export const RegisterEspecialista = () => {
     }
 
 
-
-    useEffect(() => {
-        fetch("https://apis.digital.gob.cl/dpa/regiones").then(
-            response => response.json()
-        ).then(
-            data => {
-                setRegiones(data)
-            }
-        )
-    }, [])
 
     const [cedIdentidadPlaceholder, setCedIdentidadPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivo...</span>)
     const [certResidenciaPlaceholder, setcertResidenciaPlaceholder] = useState(<span className='absolute font-normal text-foreground-500 text-sm'>Subir archivo...</span>)
@@ -88,11 +161,10 @@ export const RegisterEspecialista = () => {
                 setcedAntecedentesPlaceholder(<span className='absolute text-green-600 font-normal text-sm'>Archivo subido</span>)
                 break;
         }
-        
-
     })
 
     return (
+
         <main className="container flex justify-between flex-col px-5 lg:flex-row gap-4 m-auto">
             <div className="basis-8/12 text-center pt-10">
                 <span className="mb-4 px-4 md:px-0 flex flex-col">
@@ -109,300 +181,301 @@ export const RegisterEspecialista = () => {
                 </span>
 
             </div>
-            <form className=" gap-3 basis-8/12 lg:basis-5/12 pt-3 lg:pt-20 col-span-6 flex flex-col ">
+            <form className=" gap-3 basis-8/12 lg:basis-5/12 pt-3 lg:pt-20 col-span-6 flex flex-col " onSubmit={(e) => register(e)} encType="multipart/form-data" ref={formRegister}>
 
                 <Tabs aria-label="Pasos" variant="underlined" color="secondary">
-                    <Tab className="grid grid-cols-2 gap-3" key="paso1" title="Paso 1">
-                        <div >
-                            <Input variant="underlined"
-                                type="text"
-                                label="Nombres"
-                                labelPlacement="outside"
-                                placeholder="Ingrese sus nombres"
-                                id="txt_nombres"
-                                name="txt_nombres"
+                    <Tab key="paso1" title="Paso 1">
+                        <KeepAlive  >
+                            <div className="grid grid-cols-2 gap-3 relative">
+                                <div >
+                                    <Input variant="underlined"
+                                        type="text"
+                                        label="Nombres"
+                                        labelPlacement="outside"
+                                        placeholder="Ingrese sus nombres"
+                                        id="txt_nombres"
+                                        name="txt_nombres"
+                                        ref={txt_nombres}
+                                    />
+                                    <Input variant="underlined"
+                                        id="txt_contrasena"
+                                        name="txt_contrasena"
+                                        className="mt-2"
+                                        labelPlacement="outside"
+                                        label="Contraseña"
+                                        placeholder="************"
+                                        endContent={
+                                            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                                                {isVisible ? (
+                                                    <FontAwesomeIcon className="text-lg text-default-400 pointer-events-none" icon={faEyeSlash} />
+                                                ) : (
+                                                    <FontAwesomeIcon className="text-lg text-default-400 pointer-events-none" icon={faEye} />
+                                                )}
+                                            </button>
+                                        }
+                                        type={isVisible ? "text" : "password"}
+                                        ref={txt_contrasena}
+                                    />
 
-                            />
-                            <Input variant="underlined"
-                                id="txt_contrasena"
-                                name="txt_contrasena"
-                                className="mt-2"
-                                labelPlacement="outside"
-                                label="Contraseña"
-                                placeholder="************"
-                                endContent={
-                                    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                                        {isVisible ? (
-                                            <FontAwesomeIcon className="text-lg text-default-400 pointer-events-none" icon={faEyeSlash} />
-                                        ) : (
-                                            <FontAwesomeIcon className="text-lg text-default-400 pointer-events-none" icon={faEye} />
-                                        )}
-                                    </button>
-                                }
-                                type={isVisible ? "text" : "password"}
-
-                            />
-
-                            <Input variant="underlined"
-                                className="mt-2"
-                                type="text"
-                                label="Run"
-                                labelPlacement="outside"
-                                placeholder="12.345.678-k"
-                                id="txt_run"
-                                name="txt_run"
-                                value={run}
-                                maxLength={12}
-                                onChange={formatearRun}
-                            />
-
-                            {(typeof regiones === 'undefined') ? (
-
-                                <Select variant="underlined" className="mt-2" labelPlacement={'outside'} disabled label="Región" placeholder="Seleccione una región"></Select>
-
-                            ) : (
-
-                                <Select
-                                    variant="underlined"
-                                    className="mt-2"
-                                    labelPlacement={'outside'}
-                                    label="Región"
-                                    placeholder="Seleccione una región"
-                                    items={regiones}
-                                    onChange={(evt) => fetchCombos(evt, 'provincia')}
-                                >
-                                    {(region) => <SelectItem key={region.codigo + '__' + v4()}>{region.nombre}</SelectItem>}
-
-                                </Select>
-
-                            )}
-
-                            {(comunas.length == 1) ? (
-
-                                <Select variant="underlined" className="mt-2" labelPlacement={'outside'} disabled label="Comuna" placeholder="Seleccione una comuna"></Select>
-
-                            ) : (
-
-                                <Select
-                                    variant="underlined"
-                                    className="mt-2"
-                                    labelPlacement={'outside'}
-                                    label="Comuna"
-                                    placeholder="Seleccione una comuna"
-                                    items={comunas}
-                                >
-                                    {(comuna) => <SelectItem key={comuna.codigo + '__' + v4()}>{comuna.nombre}</SelectItem>}
-
-                                </Select>
-
-                            )}
-
-                        </div>
+                                    <Input variant="underlined"
+                                        className="mt-2"
+                                        type="text"
+                                        label="Run"
+                                        labelPlacement="outside"
+                                        placeholder="12.345.678-k"
+                                        id="txt_run"
+                                        name="txt_run"
+                                        value={run}
+                                        maxLength={12}
+                                        onChange={formatearRun}
+                                        ref={txt_run}
+                                    />
 
 
-                        <div>
-                            <Input variant="underlined"
-                                id="txt_apellidos"
-                                name="txt_apellidos"
-                                type="text"
-                                label="Apellidos"
-                                labelPlacement="outside"
-                                placeholder="Ingrese sus apellidos"
-                            />
 
-                            <Input variant="underlined"
-                                className="mt-2"
-                                type="email"
-                                label="Correo electrónico"
-                                labelPlacement="outside"
-                                placeholder="email@workit.cl"
-                                id="txt_email"
-                                name="txt_email"
+                                    <Select
+                                        variant="underlined"
+                                        className="mt-2"
+                                        labelPlacement={'outside'}
+                                        label="Región"
+                                        placeholder="Seleccione una región"
+                                        items={regiones}
+                                        ref={txt_region}
+                                        onChange={(evt) => cargarCombos(evt, 'provincia')}
+                                    >
+                                        {(region) => <SelectItem key={`${region.codigo}__${v4()}:${region.nombre}`}>{region.nombre}</SelectItem>}
 
-                            />
-
-                            <Input variant="underlined"
-                                startContent={
-                                    <span className="text-sm text-default-500 align-bottom">+569</span>
-                                }
-                                className="mt-2"
-                                type="text"
-                                label="Teléfono"
-                                labelPlacement="outside"
-                                placeholder="12345678"
-                                maxLength={8}
-                                id="txt_telefono"
-                                name="txt_telefono"
-                            />
+                                    </Select>
 
 
-                            {(provincias.length == 1) ? (
-                                <Select variant="underlined" className="mt-2" labelPlacement={'outside'} disabled label="Provincia" placeholder="Seleccione una provincia"></Select>
 
-                            ) : (
 
-                                <Select
-                                    variant="underlined"
-                                    className="mt-2"
-                                    labelPlacement={'outside'}
-                                    label="Provincia"
-                                    placeholder="Seleccione una provincia"
-                                    items={provincias}
-                                    onChange={(evt) => fetchCombos(evt, 'comuna')}
-                                >
-                                    {(provincia) => <SelectItem key={provincia.codigo + '__' + v4()}>{provincia.nombre}</SelectItem>}
+                                    <Select
+                                        variant="underlined"
+                                        className="mt-2"
+                                        labelPlacement={'outside'}
+                                        label="Comuna"
+                                        placeholder="Seleccione una comuna"
+                                        items={comboComunas}
+                                        ref={txt_comuna}
+                                    >
+                                        {(comuna) => <SelectItem key={`${comuna.codigo}__${v4()}:${comuna.nombre}`}>{comuna.nombre}</SelectItem>}
 
-                                </Select>
+                                    </Select>
 
-                            )}
 
-                            <Input variant="underlined"
-                                className="mt-2"
-                                id="txt_calle"
-                                name="txt_calle"
-                                type="text"
-                                label="Calle y número"
-                                labelPlacement="outside"
-                                placeholder="Calle 123"
-                            />
-                        </div>
 
-                        <div className="col-span-6 text-sm mt-2 flex flex-col gap-2">
-                            <span className="place-self-center">¿Ya estás registrado? <Link to="/especialistas/login" className="text-Primary">Inicia sesión</Link></span>
-                        </div>
+                                </div>
+
+
+                                <div>
+                                    <Input variant="underlined"
+                                        id="txt_apellidos"
+                                        name="txt_apellidos"
+                                        type="text"
+                                        label="Apellidos"
+                                        labelPlacement="outside"
+                                        placeholder="Ingrese sus apellidos"
+                                        ref={txt_apellidos}
+                                    />
+
+                                    <Input variant="underlined"
+                                        className="mt-2"
+                                        type="email"
+                                        label="Correo electrónico"
+                                        labelPlacement="outside"
+                                        placeholder="email@workit.cl"
+                                        id="txt_email"
+                                        name="txt_email"
+                                        ref={txt_email}
+                                    />
+
+                                    <Input variant="underlined"
+                                        startContent={
+                                            <span className="text-sm text-default-500 align-bottom">+569</span>
+                                        }
+                                        className="mt-2"
+                                        type="text"
+                                        label="Teléfono"
+                                        labelPlacement="outside"
+                                        placeholder="12345678"
+                                        maxLength={8}
+                                        id="txt_telefono"
+                                        name="txt_telefono"
+                                        ref={txt_telefono}
+                                    />
+
+
+
+
+                                    <Select
+                                        variant="underlined"
+                                        className="mt-2"
+                                        labelPlacement={'outside'}
+                                        label="Provincia"
+                                        placeholder="Seleccione una provincia"
+                                        items={comboProvincias}
+                                        ref={txt_provincia}
+                                        onChange={(evt) => cargarCombos(evt, 'comuna')}
+                                    >
+                                        {(provincia) => <SelectItem key={`${provincia.codigo}__${v4()}:${provincia.nombre}`}>{provincia.nombre}</SelectItem>}
+
+                                    </Select>
+
+
+                                    <Input variant="underlined"
+                                        className="mt-2"
+                                        id="txt_direccion"
+                                        name="txt_direccion"
+                                        type="text"
+                                        label="Calle y número"
+                                        labelPlacement="outside"
+                                        placeholder="Calle 123"
+                                        ref={txt_direccion}
+                                    />
+                                </div>
+
+                                <div className="col-span-6 text-sm mt-2 flex flex-col gap-2">
+                                    <span className="place-self-center">¿Ya estás registrado? <Link to="/especialistas/login" className="text-Primary">Inicia sesión</Link></span>
+                                </div>
+                            </div>
+                        </KeepAlive>
                     </Tab>
 
-                    <Tab className="grid grid-cols-2 gap-3 relative" key="paso2" title="Paso 2">
-                        <div>
-                            <span>
-                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Cédula de identidad</label>
-                                <Input
-                                    className="mb-2"
-                                    id="fl_cedulaIdentidad"
-                                    name="fl_cedulaIdentidad"
-                                    variant="underlined"
-                                    type="file"
-                                    onChange={() => handleFileInputs('identidad')}
-                                    endContent={
-                                        <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
-                                            <span><FontAwesomeIcon className="text-l text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
-                                        </Button>
+                    <Tab key="paso2" title="Paso 2">
+                        <KeepAlive >
+                            <div className="grid grid-cols-2 gap-3 relative">
+                                <div>
+                                    <span>
+                                        <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Cédula de identidad</label>
+                                        <Input
+                                            className="mb-2"
+                                            id={`fl_cedIdentidad#${run}`}
+                                            name={`fl_cedIdentidad#${run}`}
+                                            variant="underlined"
+                                            type="file"
+                                            onChange={() => handleFileInputs('identidad')}
+                                            endContent={
+                                                <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
+                                                    <span><FontAwesomeIcon className="text-l text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
+                                                </Button>
 
-                                    }
-                                    startContent={
-                                        cedIdentidadPlaceholder
+                                            }
+                                            startContent={
+                                                cedIdentidadPlaceholder
 
-                                    }
-                                    style={{ opacity: 0 }}
-                                />
-                            </span>
+                                            }
+                                            style={{ opacity: 0 }}
+                                        />
+                                    </span>
 
-                            <span>
-                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Títulos profesionales</label>
-                                <Input
-                                    id="fl_titulosProfesionales"
-                                    name="fl_titulosProfesionales"
-                                    variant="underlined"
-                                    type="file"
-                                    multiple
-                                    onChange={() => handleFileInputs('titulos')}
-                                    endContent={
-                                        <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
-                                            <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
-                                        </Button>
+                                    <span>
+                                        <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Títulos profesionales</label>
+                                        <Input
+                                            id={`fl_tituloProfesional#${run}`}
+                                            name={`fl_tituloProfesional#${run}`}
+                                            variant="underlined"
+                                            type="file"
+                                            multiple
+                                            onChange={() => handleFileInputs('titulos')}
+                                            endContent={
+                                                <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
+                                                    <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
+                                                </Button>
 
-                                    }
-                                    startContent={
-                                        titProfesionalesPlaceholder
-                                    }
-                                    style={{ opacity: 0 }}
-                                />
-                            </span>
+                                            }
+                                            startContent={
+                                                titProfesionalesPlaceholder
+                                            }
+                                            style={{ opacity: 0 }}
+                                        />
+                                    </span>
 
-                            <Select
-                                id="txt_rubro"
-                                name="txt_rubro"
-                                variant="underlined"
-                                className="mt-2"
-                                labelPlacement={'outside'}
-                                label="Rubro"
-                                placeholder="Seleccione su rubro"
-                            >
-                                <SelectItem>
-                                    Informática
-                                </SelectItem>
+                                    <Select
+                                        id="txt_rubro"
+                                        name="txt_rubro"
+                                        ref={txt_rubro}
+                                        variant="underlined"
+                                        className="mt-2"
+                                        labelPlacement={'outside'}
+                                        label="Rubro"
+                                        placeholder="Seleccione su rubro"
+                                    >
+                                        <SelectItem key={`${v4()}:Informática`}>
+                                            Informática
+                                        </SelectItem>
 
-                                <SelectItem>
-                                    Construcción
-                                </SelectItem>
+                                        <SelectItem key={`${v4()}:Construcción`}>
+                                            Construcción
+                                        </SelectItem>
 
-                                <SelectItem>
-                                    Mecánica
-                                </SelectItem>
-                            </Select>
-                        </div>
+                                        <SelectItem key={`${v4()}:Mecánica`}>
+                                            Mecánica
+                                        </SelectItem>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <span>
+                                        <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de residencia</label>
+                                        <Input
+                                            className="mb-2"
+                                            id={`fl_certResidencia#${run}`}
+                                            name={`fl_certResidencia#${run}`}
+                                            variant="underlined"
+                                            type="file"
+                                            onChange={() => handleFileInputs('residencia')}
+                                            endContent={
+                                                <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
+                                                    <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
+                                                </Button>
 
+                                            }
+                                            startContent={
+                                                certResidenciaPlaceholder
+                                            }
+                                            style={{ opacity: 0 }}
+                                        />
+                                    </span>
+                                    <span>
+                                        <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de antecedentes</label>
+                                        <Input
+                                            id={`fl_certAntecedentes#${run}`}
+                                            name={`fl_certAntecedentes#${run}`}
+                                            variant="underlined"
+                                            type="file"
+                                            onChange={() => handleFileInputs('antecedentes')}
+                                            endContent={
+                                                <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
+                                                    <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
+                                                </Button>
 
-                        <div>
-                            <span>
-                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de residencia</label>
-                                <Input
-                                    className="mb-2"
-                                    id="fl_certResidencia"
-                                    name="fl_certResidencia"
-                                    variant="underlined"
-                                    type="file"
-                                    onChange={() => handleFileInputs('residencia')}
-                                    endContent={
-                                        <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
-                                            <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
-                                        </Button>
+                                            }
+                                            startContent={
+                                                certAntecedentesPlaceholder
+                                            }
+                                            style={{ opacity: 0 }}
+                                        />
+                                    </span>
+                                    <Input variant="underlined"
+                                        className="mt-2"
+                                        type="text"
+                                        label="Especifique su profesión"
+                                        labelPlacement="outside"
+                                        placeholder="Ej: Programador"
+                                        id="txt_profesion"
+                                        name="txt_profesion"
+                                        ref={txt_profesion}
+                                    />
 
-                                    }
-                                    startContent={
-                                        certResidenciaPlaceholder
-                                    }
-                                    style={{ opacity: 0 }}
-                                />
-                            </span>
-                            <span>
-                                <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de antecedentes</label>
-                                <Input
-                                    id="fl_certAntecedentes"
-                                    name="fl_certAntecedentes"
-                                    variant="underlined"
-                                    type="file"
-                                    onChange={() => handleFileInputs('antecedentes')}
-                                    endContent={
-                                        <Button radius="none" variant="flat" className="px-6" isIconOnly disabled color="none" type="button" >
-                                            <span><FontAwesomeIcon className="text-l  text-foreground-400 pointer-events-none" icon={faArrowUpFromBracket} /></span>
-                                        </Button>
-
-                                    }
-                                    startContent={
-                                        certAntecedentesPlaceholder
-                                    }
-                                    style={{ opacity: 0 }}
-                                />
-                            </span>
-                            <Input variant="underlined"
-                                className="mt-2"
-                                type="text"
-                                label="Especifique su profesión"
-                                labelPlacement="outside"
-                                placeholder="Ej: Programador"
-                                id="txt_email"
-                                name="txt_email"
-
-                            />
-
-                        </div>
-                        <div className="col-span-6 mt-2 text-sm flex flex-col gap-2">
-                            <Button color="secondary" className="w-10/12 place-self-center mb-2">Registrarse</Button>
-                            <span className="place-self-center">¿Ya estás registrado? <Link to="/especialistas/login" className="text-Primary">Inicia sesión</Link></span>
-                        </div>
-
+                                </div>
+                                <div className="col-span-6 mt-2 text-sm flex flex-col gap-2">
+                                    <Button color="secondary" type="submit" className="w-10/12 place-self-center mb-2">Registrarse</Button>
+                                    <span className="place-self-center">¿Ya estás registrado? <Link to="/especialistas/login" className="text-Primary">Inicia sesión</Link></span>
+                                </div>
+                            </div>
+                        </KeepAlive>
                     </Tab>
+
                 </Tabs>
 
 
