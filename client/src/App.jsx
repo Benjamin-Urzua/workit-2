@@ -12,6 +12,7 @@ import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
 import { NotFoundPage} from "./components/Global/NotFoundPage"
 import { SesionExpirada } from "./components/Global/SesionExpirada"
 import { Admin } from "./components/Admin/Admin"
+import { PerfilEspecialista } from "./components/Especialistas/PerfilEspecialista"
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/buscar" element={<ResultadosBusqueda />} />
           <Route path="/error" element={<NotFoundPage />} />
           <Route path="/sesionexpirada" element={<SesionExpirada />} />
+          <Route path="/especialistas/perfil" element={<PerfilEspecialista/>} />
           <Route path="/clientes/configuracionClientes" element={<ConfiguracionCliente/>}></Route>
         </Routes>
       </BrowserRouter>
