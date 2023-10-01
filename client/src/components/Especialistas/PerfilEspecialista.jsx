@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Header } from '../Global/Header'
 import { Button, Card, CardBody, CardFooter, CardHeader, Avatar, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeart } from "@fortawesome/free-regular-svg-icons"
 
 
 
@@ -18,6 +20,7 @@ export const PerfilEspecialista = () => {
     return (
         <>
             <Header />
+            <div className="relative">
 
             <div className="flex flex-col md:flex-row bg-gray-200">
 
@@ -36,9 +39,10 @@ export const PerfilEspecialista = () => {
                             </div>
                         </CardHeader>
 
-                        <CardFooter className="flex gap-3">
-                            <div className="ml-auto flex gap-3">
 
+                        <CardFooter className="flex gap-3">
+                            <a href="#" className="text-sm text-Primary  block mt-2"><FontAwesomeIcon icon={faHeart}></FontAwesomeIcon> Guardar</a>
+                            <div className="ml-auto flex gap-3">
                                 <Button color="secondary" className="">Reservar</Button>
                                 <Button color="secondary" variant="bordered" className="">Enviar Mensaje</Button>
                             </div>
@@ -162,7 +166,7 @@ export const PerfilEspecialista = () => {
                                 <div className="flex items-center mt-2">
                                     <span className="text-black text-xl">4.8 </span>
                                     <div className="flex text-yellow-500 ml-2">
-                                        {/* Aquí podrías poner un componente de estrellas o íconos de estrellas según tu valoración */}
+
                                         ★★★★★
                                     </div>
                                 </div>
@@ -209,30 +213,20 @@ export const PerfilEspecialista = () => {
                                             <p className="text-gray-500 text-sm">12 de Septiembre, 2023</p> {/* Aquí va la fecha del comentario */}
                                             <p className="text-black">¡Excelente servicio! Muy profesional y resolutivo.</p>
                                         </div>
-                                        
+
                                     </div>
                                     <div className="flex justify-center mt-4">
-                                    <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
+                                        <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
-
-
-
-
-
                 </div>
 
 
-
-
-
                 {/* Sección de reserva de cita */}
-                <div className="w-1/2 p-4 ">
+                <div className="sticky top-0 w-full md:w-1/2 p-4 ">
                     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
                         <h2 className="text-2xl font-semibold mb-4">Reservar Cita</h2>
                         <label htmlFor="trabajo" className="block text-sm font-medium text-gray-700">Elige tu servicio:</label>
@@ -278,6 +272,7 @@ export const PerfilEspecialista = () => {
                     </div>
                 </div>
 
+            </div>
             </div>
         </>
     )
