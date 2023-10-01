@@ -75,7 +75,9 @@ export const Hero = () => {
                 <a href="/decorador" className="text-sm hover:underline">Jardinero</a>
 
               </div>
+              <div className="flex justify-center mt-4">
               <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
+              </div>
             </div>
           </div>
         </div>
