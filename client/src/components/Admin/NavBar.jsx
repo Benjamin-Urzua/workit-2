@@ -1,17 +1,46 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useGlobalState, setGlobalState } from "../../../global_states"
 import { useState } from "react"
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
 
 export const NavBar = () => {
     const [vista] = useGlobalState("vistaAdmin")
     const handleVista = (e, v) => {
         e.preventDefault()
-
-        setGlobalState("vistaAdmin", v) // vistaAdmin:"cliente"        vistaAdmin:"profesionales"
+        setGlobalState("vistaAdmin", v)// vistaAdmin:"cliente"        vistaAdmin:"profesionales"
     }
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const redirect = useNavigate()
+    const logout = async () => {
+        await fetch('http://localhost:8080/admin/logout', { method: 'POST' })
+            .then(res => res.json().then(msg => {
+                const ReactSwal = withReactContent(Swal)
+                switch (msg["codigo"]) {
+                    case 1:
+                        ReactSwal.fire({
+                            icon: 'success',
+                            title: '¡Genial!',
+                            text: msg["msg"],
+                        }).then((result) => {
+                            if (result['isConfirmed']) {
+                                redirect("/")
+                            }
+                        })
+                        break;
+                    case 10:
+                        ReactSwal.fire({
+                            icon: 'error',
+                            title: 'Problemas...',
+                            text: msg["msg"],
+                        })
+                        break;
+                }
+            }
+            ))
+    }
 
     return (
         <Navbar position="static" onMenuOpenChange={setIsMenuOpen}>
@@ -22,7 +51,7 @@ export const NavBar = () => {
                     className="sm:hidden"
                 />
                 <NavbarBrand>
-                    <Link to="/"><span className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.<small className="text-Primary text-sm ">Admin</small></span></span></Link>
+                    <Link to="/"><span className="font-['Poppins', sans-serif] font-[650] text-[32px]">Empl<span className="text-Primary">ify<small className="text-Primary text-sm ">Admin</small></span></span></Link>
                 </NavbarBrand>
             </NavbarContent>
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
@@ -72,7 +101,7 @@ export const NavBar = () => {
             </NavbarContent>
             <NavbarContent justify="end">
                 <NavbarItem className="hidden lg:flex">
-                    <Link to="">Cerrar sesion</Link>
+                    <Link  onClick={() => logout()}>Cerrar sesion</Link>
                 </NavbarItem>
             </NavbarContent>
 
@@ -125,7 +154,7 @@ export const NavBar = () => {
 
                 <NavbarMenuItem>
 
-                    <Link to="">Cerrar sesion</Link>
+                    <Link to="/">Cerrar sesion</Link>
                 </NavbarMenuItem>
             </NavbarMenu>
         </Navbar>

@@ -3,9 +3,10 @@ import { Dropdown, DropdownTrigger, Input, Button, DropdownMenu, DropdownItem, C
 import { faChevronDown, faMagnifyingGlass, faChevronUp, faLocationDot, faAddressCard, faBriefcase, faWrench } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useMemo, useState } from "react"
-import { faWeebly } from "@fortawesome/free-brands-svg-icons"
+import { useGlobalState } from "../../../global_states/searchResults"
 
 export const ResultadosBusqueda = () => {
+    const [searchResults] = useGlobalState("searchResults")
     const [preciosDesde, setPreciosDesde] = useState(new Set(["$100.000"]));
 
     const precioDesde = useMemo(
@@ -232,371 +233,86 @@ export const ResultadosBusqueda = () => {
                 <div className="px-16 sm:flex sm:flex-col sm:justify-between lg:px-36 2xl:px-64  p-5">
                     <h1 className="text-[1.8rem] font-[500] ">Resultados de la búsqueda</h1>
                     <h4 className="text-[1.1rem] font-[500] ">Informáticos en Los Ángeles</h4>
-
-                    <Card className="mt-2">
-                        <CardHeader className="justify-between">
-                            <div className="flex gap-5">
-                                <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
-                                <div className="flex flex-col gap-1 items-start justify-center">
-                                    <h4 className="text-small font-semibold leading-none text-default-600">Zoey Lang</h4>
-                                    <h5 className="text-small tracking-tight text-default-400">Informático</h5>
-                                    <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardBody className="px-3 text-small text-default-500">
-                            <span className="pb-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
-                                </span>
-                                Los Ángeles
-                            </span>
-                            <p>
-                                <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
-                                Me llamo tal, tengo tanta experiencia, nose que... hago tales trabajos, tal y tal Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea numquam totam dolorum delectus earum quos! Voluptatum, velit explicabo est perferendis ratione dolor distinctio incidunt unde dolorum a eius iste. Accusamus!
-                            </p>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
-                                </span>
-                                5 años en la plataforma
-                            </span>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
-                                </span>
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
+                    {
+                        searchResults.map((especialista) => {
+                            return (
+                                <Card key={especialista._id} className="mt-2">
+                                    <CardHeader className="justify-between">
+                                        <div className="flex gap-5">
+                                            <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
+                                            <div className="flex flex-col gap-1 items-start justify-center">
+                                                <h4 className="text-small font-semibold leading-none text-default-600">{`${especialista.nombres} ${especialista.apellidos}`}</h4>
+                                                <h5 className="text-small tracking-tight text-default-400">{especialista.profesion}</h5>
+                                                <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
+                                            </div>
                                         </div>
-                                    </PopoverContent>
-                                </Popover>
+                                    </CardHeader>
+                                    <CardBody className="px-3 text-small text-default-500">
+                                        <span className="pb-2">
+                                            <span>
+                                                <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
+                                            </span>
+                                             {especialista.comuna}
+                                        </span>
+                                        <p>
+                                            <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
+                                            {especialista.perfil.experiencia}
+                                        </p>
+                                        <span className="pt-2">
+                                            <span>
+                                                <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
+                                            </span>
+                                            {especialista.perfil.antiguedad} años en la plataforma
+                                        </span>
+                                        <span className="pt-2">
+                                            <span>
+                                                <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
+                                            </span>
+                                            <Popover color="none" size="sm" placement="bottom">
+                                                <PopoverTrigger>
+                                                    <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <div className="px-1 py-2">
+                                                        <div className="text-small font-bold">$100.000</div>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
 
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </span>
-                        </CardBody>
-                        <CardFooter className="gap-3 flex justify-between">
-                            <p className="font-semibold text-green-400 text-small">Disponible</p>
-                            <Button color="secondary" className="">Visitar perfil</Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card className="mt-2">
-                        <CardHeader className="justify-between">
-                            <div className="flex gap-5">
-                                <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
-                                <div className="flex flex-col gap-1 items-start justify-center">
-                                    <h4 className="text-small font-semibold leading-none text-default-600">Zoey Lang</h4>
-                                    <h5 className="text-small tracking-tight text-default-400">Informático</h5>
-                                    <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardBody className="px-3 text-small text-default-500">
-                            <span className="pb-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
-                                </span>
-                                Los Ángeles
-                            </span>
-                            <p>
-                                <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
-                                Me llamo tal, tengo tanta experiencia, nose que... hago tales trabajos, tal y tal Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea numquam totam dolorum delectus earum quos! Voluptatum, velit explicabo est perferendis ratione dolor distinctio incidunt unde dolorum a eius iste. Accusamus!
-                            </p>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
-                                </span>
-                                5 años en la plataforma
-                            </span>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
-                                </span>
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
+                                            <Popover color="none" size="sm" placement="bottom">
+                                                <PopoverTrigger>
+                                                    <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <div className="px-1 py-2">
+                                                        <div className="text-small font-bold">$100.000</div>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
 
 
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </span>
-                        </CardBody>
-                        <CardFooter className="gap-3 flex justify-between">
-                            <p className="font-semibold text-rose-500 text-small">Contratado</p>
-                            <Button color="secondary" className="">Visitar perfil</Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card className="mt-2">
-                        <CardHeader className="justify-between">
-                            <div className="flex gap-5">
-                                <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
-                                <div className="flex flex-col gap-1 items-start justify-center">
-                                    <h4 className="text-small font-semibold leading-none text-default-600">Zoey Lang</h4>
-                                    <h5 className="text-small tracking-tight text-default-400">Informático</h5>
-                                    <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardBody className="px-3 text-small text-default-500">
-                            <span className="pb-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
-                                </span>
-                                Los Ángeles
-                            </span>
-                            <p>
-                                <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
-                                Me llamo tal, tengo tanta experiencia, nose que... hago tales trabajos, tal y tal Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea numquam totam dolorum delectus earum quos! Voluptatum, velit explicabo est perferendis ratione dolor distinctio incidunt unde dolorum a eius iste. Accusamus!
-                            </p>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
-                                </span>
-                                5 años en la plataforma
-                            </span>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
-                                </span>
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
+                                            <Popover color="none" size="sm" placement="bottom">
+                                                <PopoverTrigger>
+                                                    <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <div className="px-1 py-2">
+                                                        <div className="text-small font-bold">$100.000</div>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </span>
+                                    </CardBody>
+                                    <CardFooter className="gap-3 flex justify-between">
+                                        <p className="font-semibold text-green-400 text-small">{especialista.disponibilidad}</p>
+                                        <Button color="secondary" className="">Visitar perfil</Button>
+                                    </CardFooter>
+                                </Card>
+                            )
+                        })
+                    }
 
 
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </span>
-                        </CardBody>
-                        <CardFooter className="gap-3 flex justify-between">
-                            <p className="font-semibold text-rose-500 text-small">Contratado</p>
-                            <Button color="secondary" className="">Visitar perfil</Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card className="mt-2">
-                        <CardHeader className="justify-between">
-                            <div className="flex gap-5">
-                                <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
-                                <div className="flex flex-col gap-1 items-start justify-center">
-                                    <h4 className="text-small font-semibold leading-none text-default-600">Zoey Lang</h4>
-                                    <h5 className="text-small tracking-tight text-default-400">Informático</h5>
-                                    <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardBody className="px-3 text-small text-default-500">
-                            <span className="pb-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
-                                </span>
-                                Los Ángeles
-                            </span>
-                            <p>
-                                <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
-                                Me llamo tal, tengo tanta experiencia, nose que... hago tales trabajos, tal y tal Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea numquam totam dolorum delectus earum quos! Voluptatum, velit explicabo est perferendis ratione dolor distinctio incidunt unde dolorum a eius iste. Accusamus!
-                            </p>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
-                                </span>
-                                5 años en la plataforma
-                            </span>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
-                                </span>
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </span>
-                        </CardBody>
-                        <CardFooter className="gap-3 flex justify-between">
-                            <p className="font-semibold text-rose-500 text-small">Contratado</p>
-                            <Button color="secondary" className="">Visitar perfil</Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card className="mt-2">
-                        <CardHeader className="justify-between">
-                            <div className="flex gap-5">
-                                <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
-                                <div className="flex flex-col gap-1 items-start justify-center">
-                                    <h4 className="text-small font-semibold leading-none text-default-600">Zoey Lang</h4>
-                                    <h5 className="text-small tracking-tight text-default-400">Informático</h5>
-                                    <h5 className="text-small tracking-tight text-Primary">★★★★★ <span className="text-default-600 text-xs font-semibold">70 opiniones</span></h5>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardBody className="px-3 text-small text-default-500">
-                            <span className="pb-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
-                                </span>
-                                Los Ángeles
-                            </span>
-                            <p>
-                                <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
-                                Me llamo tal, tengo tanta experiencia, nose que... hago tales trabajos, tal y tal Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea numquam totam dolorum delectus earum quos! Voluptatum, velit explicabo est perferendis ratione dolor distinctio incidunt unde dolorum a eius iste. Accusamus!
-                            </p>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faBriefcase} />
-                                </span>
-                                5 años en la plataforma
-                            </span>
-                            <span className="pt-2">
-                                <span>
-                                    <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
-                                </span>
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-
-
-                                <Popover color="none" size="sm" placement="bottom">
-                                    <PopoverTrigger>
-                                        <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div className="px-1 py-2">
-                                            <div className="text-small font-bold">$100.000</div>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </span>
-                        </CardBody>
-                        <CardFooter className="gap-3 flex justify-between">
-                            <p className="font-semibold text-rose-500 text-small">Contratado</p>
-                            <Button color="secondary" className="">Visitar perfil</Button>
-                        </CardFooter>
-                    </Card>
                 </div>
             </div>
         </>

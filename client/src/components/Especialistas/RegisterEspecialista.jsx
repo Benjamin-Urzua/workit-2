@@ -3,7 +3,7 @@ import { formatRut } from 'rutlib';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState, useRef } from "react"
+import {  useState, useRef } from "react"
 import { v4 } from 'uuid'
 import { Link, useNavigate } from "react-router-dom";
 import { regiones, comunas, provincias } from "../../data/regiones";
@@ -73,7 +73,8 @@ export const RegisterEspecialista = () => {
                             text: msg["msg"],
                         }).then((result) => {
                             if (result['isConfirmed']) {
-                                return redirect("/especialistas/login")
+                                localStorage.setItem("tempRun", run)
+                                return redirect("/especialistas/register/perfilInicial")
                             }
                         })
                         break;

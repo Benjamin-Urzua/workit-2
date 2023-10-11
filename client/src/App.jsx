@@ -12,8 +12,8 @@ import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
 import { NotFoundPage} from "./components/Global/NotFoundPage"
 import { SesionExpirada } from "./components/Global/SesionExpirada"
 import { Admin } from "./components/Admin/Admin"
+import { PerfilInicial } from "./components/Especialistas/PerfilInicial"
 import { PerfilEspecialista } from "./components/Especialistas/PerfilEspecialista"
-
 
 const App = () => {
   return (
@@ -26,6 +26,7 @@ const App = () => {
           <Route path="/clientes/register" element={<RegisterCliente />} />
           <Route path="/especialistas/login" element={<LoginEspecialista />} />
           <Route path="/especialistas/register" element={<RegisterEspecialista />} />
+          <Route path="/especialistas/register/perfilInicial" element={<PerfilInicial />} />
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
           <Route path="/error" element={<NotFoundPage />} />

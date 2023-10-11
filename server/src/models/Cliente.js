@@ -12,6 +12,8 @@ const Cliente = mongoose.Schema({
     provincia: String,
     comuna: String, 
     direccion: String,
+    estado:Boolean,
+    fechaRegistro: Date,
 })
 
 module.exports = mongoose.model("Cliente", Cliente)

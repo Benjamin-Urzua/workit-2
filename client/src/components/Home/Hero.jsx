@@ -1,12 +1,54 @@
 import { Input, Button, } from "@nextui-org/react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Avatar } from "@nextui-org/react";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { setGlobalState } from "../../../global_states/searchResults";
 
 
 export const Hero = () => {
+  const txt_comuna = useRef()
+  const txt_rubro = useRef()
+  const redirect = useNavigate()
+  const buscarEspecialista = async (e) => {
+    e.preventDefault()
+    const comuna = txt_comuna.current.value
+    const rubro = txt_rubro.current.value
+
+    const body = JSON.stringify(
+      {
+        comuna: comuna,
+        rubro: rubro
+      }
+    )
+    const headers = {
+      "Content-Type": "application/json"
+    }
+
+    await fetch('http://localhost:8080/buscar', { method: 'POST', body: body, headers: headers })
+      .then(res => res.json().then(msg => {
+        const ReactSwal = withReactContent(Swal)
+        switch (msg["codigo"]) {
+          case 1:
+              redirect("/buscar", setGlobalState("searchResults", msg["data"]))
+            break;
+          case 2:
+            ReactSwal.fire({
+              icon: 'warning',
+              title: 'Vaya...',
+              text: "Por lo visto no existen profesionales del rubro solicitado dentro de tu comuna.",
+              footer: "Asegúrate de haber escrito bien tu comuna."
+            })
+            break;
+
+          case 10:
+            break;
+        }
+      }))
+  }
 
 
   return (
@@ -15,11 +57,11 @@ export const Hero = () => {
         <div className="relative">
           <h1 className="text-[30px] md:text-[48px]  font-[700]">Bienvenido a Work<span className="text-Primary">It</span></h1>
           <h5 className="text-[15px] md:text-[24px] text-gray-700">¡Busca al profesional que salvará tu día!</h5>
-          <div className="flex justify-center items-center flex-wrap mt-4">
+          <form className="flex justify-center items-center flex-wrap mt-4" onSubmit={(e) => buscarEspecialista(e)}>
             <Input
               placeholder="Ciudad o Comuna"
               className="p-4 w-full sm:w-3/4 md:w-4/5 lg:w-4/6 2xl:w-1/3"
-
+              ref={txt_comuna}
               endContent={
                 <div className="flex items-center">
 
@@ -27,6 +69,7 @@ export const Hero = () => {
                     className="outline-none border-0 bg-transparent text-default-400 text-small"
                     id="currency"
                     name="currency"
+                    ref={txt_rubro}
                   >
                     <option>Rubro</option>
                     <option>Informática</option>
@@ -38,11 +81,10 @@ export const Hero = () => {
               }
               type="text"
             />
-            <Button color="secondary" className="sm:mt-0 ">
+            <Button color="secondary" type="submit" className="sm:mt-0 ">
               <span><FontAwesomeIcon icon={faMagnifyingGlass}></FontAwesomeIcon> Buscar</span>
             </Button>
-
-          </div>
+          </form>
         </div>
 
 

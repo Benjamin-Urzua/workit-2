@@ -4,15 +4,72 @@ import { DropdownHeader } from '../Flowbite/DropdownHeader'
 import { Navbar, Avatar, NavbarBrand, NavbarContent, DropdownMenu, DropdownItem, Dropdown, DropdownTrigger, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Accordion, AccordionItem, Listbox, ListboxItem } from "@nextui-org/react";
 import { Topbar } from './Topbar'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { redirect } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 export const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  //localStorage.clear()
-  //console.log(localStorage.getItem("userName"))
+  const redirect = useNavigate()
+  const logout = async () => {
+    if (localStorage.getItem("tipoUsuario") == "Cliente") {
+      await fetch('http://localhost:8080/clientes/logout', { method: 'POST' })
+        .then(res => res.json().then(msg => {
+          const ReactSwal = withReactContent(Swal)
+          switch (msg["codigo"]) {
+            case 1:
+              ReactSwal.fire({
+                icon: 'success',
+                title: '¡Genial!',
+                text: msg["msg"],
+              }).then((result) => {
+                if (result['isConfirmed']) {
+                  localStorage.clear()
+                  redirect("/")
+                }
+              })
+              break;
+            case 10:
+              ReactSwal.fire({
+                icon: 'error',
+                title: 'Problemas...',
+                text: msg["msg"],
+              })
+              break;
+          }
+        }
+        ))
+    } else {
+      await fetch('http://localhost:8080/especialistas/logout', { method: 'POST' })
+        .then(res => res.json().then(msg => {
+          const ReactSwal = withReactContent(Swal)
+          switch (msg["codigo"]) {
+            case 1:
+              ReactSwal.fire({
+                icon: 'success',
+                title: '¡Genial!',
+                text: msg["msg"],
+              }).then((result) => {
+                if (result['isConfirmed']) {
+                  localStorage.clear()
+                  redirect("/")
+                }
+              })
+              break;
+            case 10:
+              ReactSwal.fire({
+                icon: 'error',
+                title: 'Problemas...',
+                text: msg["msg"],
+              })
+              break;
+          }
+        }
+        ))
+    }
+
+  }
   return (
     <div className='relative z-10 '>
       <Topbar />
@@ -40,28 +97,53 @@ export const Header = () => {
                   <span><DropdownHeader linkCliente='/clientes/register' linkEspecialista='/especialistas/register' label='Registrarse' /></span>
                 </NavbarItem></>)
               :
-              (<NavbarItem  >
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      variant="light"
-                      endContent={ <FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon> }
-                      startContent={ <Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
-                    >
-                      {localStorage.getItem("userName")}
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">Mi cuenta</DropdownItem>
-                    <DropdownItem key="copy">Mi perfil</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem key="delete" className="text-danger" onClick={()=>{localStorage.clear(); window.location.reload();}} color="danger" startContent={<FontAwesomeIcon size='md' icon={faRightFromBracket}></FontAwesomeIcon>}>
-                      Cerrar sesión
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-                
-              </NavbarItem>)
+              !(localStorage.getItem("tipoUsuario") == "Cliente")
+                ?
+                (<NavbarItem  >
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant="light"
+                        endContent={<FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon>}
+                        startContent={<Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
+                      >
+                        {localStorage.getItem("userName")}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu color='secondary' aria-label="Static Actions">
+                      <DropdownItem key="new">Mi cuenta</DropdownItem>
+                      <DropdownItem key="copy">Mi perfil</DropdownItem>
+                      <DropdownItem key="edit">Edit file</DropdownItem>
+                      <DropdownItem key="delete" className="text-danger" onPress={() => logout()} color="danger" startContent={<FontAwesomeIcon size='1x' icon={faRightFromBracket}></FontAwesomeIcon>}>
+                        Cerrar sesión
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+
+                </NavbarItem>)
+                :
+                (<NavbarItem  >
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant="light"
+                        endContent={<FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon>}
+                        startContent={<Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
+                      >
+                        {localStorage.getItem("userName")}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu color='secondary' aria-label="Static Actions">
+                      <DropdownItem key="new">Mis direcciones</DropdownItem>
+                      <DropdownItem key="copy" onPress={() => { redirect('/clientes/historialTrabajos') }}>Historial</DropdownItem>
+                      <DropdownItem key="edit">Edit file</DropdownItem>
+                      <DropdownItem key="delete" className="text-danger" onPress={() => logout()} color="danger" startContent={<FontAwesomeIcon size='1x' icon={faRightFromBracket}></FontAwesomeIcon>}>
+                        Cerrar sesión
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+
+                </NavbarItem>)
           }
 
         </NavbarContent>
