@@ -13,6 +13,7 @@ import { NotFoundPage} from "./components/Global/NotFoundPage"
 import { SesionExpirada } from "./components/Global/SesionExpirada"
 import { Admin } from "./components/Admin/Admin"
 import { PerfilEspecialista } from "./components/Especialistas/PerfilEspecialista"
+import { EditarPerfil } from "./components/Especialistas/EditarPerfil"
 
 
 const App = () => {
@@ -29,9 +30,11 @@ const App = () => {
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
           <Route path="/error" element={<NotFoundPage />} />
+          <Route path="/editarperfil" element={<EditarPerfil/>}/>
           <Route path="/sesionexpirada" element={<SesionExpirada />} />
           <Route path="/especialistas/perfil" element={<PerfilEspecialista/>} />
           <Route path="/clientes/configuracionClientes" element={<ConfiguracionCliente/>}></Route>
+          
         </Routes>
       </BrowserRouter>
     </main>
