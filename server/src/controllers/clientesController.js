@@ -1,4 +1,5 @@
 const modelCliente = require("../models/Cliente")
+const modelEspecialista = require("../models/Especialista")
 module.exports.register = async (req, res) => {
     try {
         const data = req.body
@@ -8,7 +9,7 @@ module.exports.register = async (req, res) => {
                 if (result != null) {
                     console.log("Registro exitoso: ", result)
                     res.status(200).json({ codigo: 1, msg: "Registro exitoso" })
-                }else{
+                } else {
                     res.status(200).json({ codigo: 2, msg: "Algo salio mal..." })
                     console.log("Algo salio mal...")
                 }
@@ -36,7 +37,7 @@ module.exports.login = async (req, res) => {
                                 req.session.user = cliente["_id"]
                                 req.session.save((err) => {
                                     if (err) { console.log(next(err)); res.status(200).json({ msg: err }) }
-                                    res.status(200).json({ codigo: 1, userName: cliente["nombres"].substr(0, cliente["nombres"].search(" ")), sessionId: req.session.user,msg: "Sesión iniciada con éxito", tipoUsuario: "Cliente" })
+                                    res.status(200).json({ codigo: 1, userName: cliente["nombres"].substr(0, cliente["nombres"].search(" ")), sessionId: req.session.user, msg: "Sesión iniciada con éxito", tipoUsuario: "Cliente" })
                                     console.log("Sesión iniciada con éxito")
 
                                 })
@@ -49,6 +50,37 @@ module.exports.login = async (req, res) => {
                 }
 
             )
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.logout = async (req, res) => {
+    try {
+        req.session.destroy(err => {
+            if (err) next(err)
+            res.status(200).json({ codigo: 1, msg: "Sesión cerrada con éxito"})
+        })
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.buscarEspecialista = async (req, res) => {
+    try {
+        const data = req.body
+        await modelEspecialista.find(data).exec()
+            .then((results) => {
+                if (results.length > 0) {
+                    console.log("Coincidencias: ", results)
+                    res.status(200).json({ codigo: 1, msg: "Han habido coincidencias", data:results })
+                } else {
+                    console.log("No han habido coincidencias")
+                    res.status(200).json({ codigo: 2, msg: "No han habido coincidencias" })  
+                }
+            })
     } catch (error) {
         console.log("Ha ocurrido una excepción: ", error)
         res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })

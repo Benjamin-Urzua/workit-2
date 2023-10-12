@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const Admin = mongoose.Schema({
 	user:String,
-    password:String
+    contrasena:String
 })
 
 module.exports = mongoose.model("Admin", Admin)

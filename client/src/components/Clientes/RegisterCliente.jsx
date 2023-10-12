@@ -3,7 +3,7 @@ import { formatRut } from 'rutlib';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { faGoogle, faFacebookF } from '@fortawesome/free-brands-svg-icons'
-import { useEffect, useState, useRef } from "react"
+import {  useState, useRef } from "react"
 import { v4 } from 'uuid'
 import { Link, useNavigate } from "react-router-dom";
 import { regiones, comunas, provincias } from "../../data/regiones";
@@ -51,7 +51,8 @@ export const RegisterCliente = () => {
                 region: region,
                 provincia: provincia,
                 comuna: comuna,
-                direccion: direccion
+                direccion: direccion,
+                estado: true
             }
         )
         const headers = {

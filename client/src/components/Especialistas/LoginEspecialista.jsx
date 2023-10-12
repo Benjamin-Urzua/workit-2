@@ -51,6 +51,7 @@ export const LoginEspecialista = () => {
                             if (result['isConfirmed']) {
                                 localStorage.setItem("user_id", msg['sessionId'])
                                 localStorage.setItem("userName", msg['userName'])
+                                localStorage.setItem("tipoUsuario", msg['tipoUsuario'])
                                 return redirect("/",
                                     toastLogin.fire({
                                         icon: 'success',
