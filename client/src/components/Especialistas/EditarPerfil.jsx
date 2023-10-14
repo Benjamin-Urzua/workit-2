@@ -6,7 +6,19 @@ import { Navbar, NavbarBrand } from "@nextui-org/react";
 
 export const EditarPerfil = () => {
 
-  const [descripcion, setDescripcion] = useState("Descripción del trabajo 1"); // Inicializar con el valor por defecto
+  const [trabajos, setTrabajos] = useState([
+    { img: "/trabajo1.png", descripcion: "Descripción del trabajo 1" },
+    { img: "/trabajo1.png", descripcion: "Descripción del trabajo 2" },
+    // ... puedes añadir más trabajos iniciales si es necesario
+  ]);
+
+  const [servicios, setServicios] = useState([
+    { descripcion: "Desarrollo de Software", precio: "$80.000/hora" },
+    { descripcion: "Administración de Sistemas", precio: "$70.000/hora" },
+    // ... puedes añadir más servicios iniciales si es necesario
+  ]);
+  
+
 
   const [editing, setEditing] = useState(false);
 
@@ -70,10 +82,10 @@ export const EditarPerfil = () => {
 
 
             <div className="p-8">
-            <div className="flex justify-between items-center mb-4"> {/* Contenedor del título y botón */}
+              <div className="flex justify-between items-center mb-4"> {/* Contenedor del título y botón */}
                 <h3 className="text-lg font-semibold text-black-500 mt-4">Experiencia</h3>
                 {!editing && <Button color="secondary" onClick={() => setEditing(true)}>Editar</Button>}
-            </div>
+              </div>
               {editing ? (
                 <textarea
                   value={sobreMi}
@@ -136,99 +148,171 @@ export const EditarPerfil = () => {
 
             </div>
 
-           
-            
 
+
+
+
+          </div >
+
+
+
+
+
+          {/* (contenido de Sobre Mí, Profesión y Formación) */}
+
+
+          {/* Sección Mis Trabajos */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            {/* (contenido de Mis Trabajos) */}
+            <div className="p-8">
+              <h3 className="text-lg font-semibold text-black">Mis Trabajos</h3>
+              <hr className="my-2" />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {trabajos.map((trabajo, index) => (
+
+                  <div key={index} className="bg-gray-200 p-4 rounded-md relative">
+                    {editing ? (
+                      <>
+                        <input
+                          type="file"
+                          onChange={(e) => {
+                            const reader = new FileReader();
+                            reader.onload = function (event) {
+                              const updatedTrabajos = [...trabajos];
+                              updatedTrabajos[index].img = event.target.result;
+                              setTrabajos(updatedTrabajos);
+                            };
+                            reader.readAsDataURL(e.target.files[0]);
+                            
+                          }}
+                        />
+                        <textarea
+                          value={trabajo.descripcion}
+                          onChange={(e) => {
+                            const updatedTrabajos = [...trabajos];
+                            updatedTrabajos[index].descripcion = e.target.value;
+                            setTrabajos(updatedTrabajos);
+                          }}
+                        />
+                        <Button color="danger" variant="bordered"
+                          onClick={() => {
+                            const updatedTrabajos = [...trabajos];
+                            updatedTrabajos.splice(index, 1);
+                            setTrabajos(updatedTrabajos);
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <img src={trabajo.img} alt={trabajo.descripcion} className="w-full h-64 object-cover rounded-md" />
+                        <p className="mt-2 text-black text-center">{trabajo.descripcion}</p>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
               {editing && (
-                 <div className="flex justify-center space-x-2 mt-4">
-                {/* Contenedor de los botones "Guardar" y "Cancelar" */}
-                  <Button color="danger" variant="bordered" onClick={handleCancel}>Cancelar</Button>
-                  <Button color="secondary" variant="bordered"  onClick={handleSave}>Guardar</Button>
-                </div>
+                <Button  color="secondary" variant="light"
+                  onClick={() => {
+                    setTrabajos([...trabajos, { img: "", descripcion: "" }]);
+                  }}
+                >
+                  Agregar trabajo
+                </Button>
               )}
-           
-            </div >
-
-
-
-
-
-
-            {/* (contenido de Sobre Mí, Profesión y Formación) */}
-
-
-            {/* Sección Mis Trabajos */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              {/* (contenido de Mis Trabajos) */}
-              <div className="p-8">
-                <h3 className="text-lg font-semibold text-black">Mis Trabajos</h3>
-                <hr className="my-2" />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                  <div className="bg-gray-200 p-4 rounded-md relative">  {/* Agregado "relative" */}
-
-
-                    <img src="/trabajo1.png" alt="Descripción del trabajo 1" className="w-full h-64 object-cover rounded-md" />
-                    <textarea
-                      value={descripcion}
-                      onChange={(e) => setDescripcion(e.target.value)}
-                      className="w-full mt-2 text-black text-center bg-transparent border-none resize-none focus:ring-0"
-                      rows="2"  // Puedes ajustar el número de filas según lo que necesites
-                    />
-
-                    {/* Input oculto para cargar imagen */}
-                    <input type="file" id="upload1" className="hidden" ></input>
-                    <label htmlFor="upload1" className="absolute bottom-2 right-2 bg-white py-1 px-2 rounded cursor-pointer hover:bg-gray-300">Editar</label>
-
-                    {/* Input oculto para subir nueva imagen */}
-                    <input type="file" id="upload1" className="hidden" />
-                    <label htmlFor="upload1" className="absolute bottom-2 right-2 bg-white py-1 px-2 rounded cursor-pointer hover:bg-gray-300">Subir</label>
-                  </div>
-
-                  {/* Puedes repetir la estructura similar para las demás imágenes... */}
-                </div>
-              </div>
-
             </div>
-
-            {/* Sección Servicios y Precios */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              {/* (contenido de Servicios y Precios) */}
-
-              <div className="p-8">
-                <h3 className="text-lg font-semibold text-black">Servicios y Precios</h3>
-                <hr className="my-2" />
-
-                <div className="mt-2">
-                  <div className="flex justify-between items-center border-b-2 py-2">
-                    <span className="text-black">Desarrollo de Software</span>
-                    <span className="text-black">$80.000/hora</span>
-                  </div>
-
-                  <div className="flex justify-between items-center border-b-2 py-2">
-                    <span className="text-black">Administración de Sistemas</span>
-                    <span className="text-black">$70.000/hora</span>
-                  </div>
-
-                  <div className="flex justify-between items-center border-b-2 py-2">
-                    <span className="text-black">Consultoría de Seguridad Informática</span>
-                    <span className="text-black">$90.000/hora</span>
-                  </div>
-
-                  <div className="flex justify-between items-center border-b-2 py-2">
-                    <span className="text-black">Análisis de Datos</span>
-                    <span className="text-black">$85.000/hora</span>
-                  </div>
-
-                  {/* ... (Más servicios y precios) */}
-                </div>
-              </div>
-            </div>
+         
 
 
 
-          </div>
+
+          
+
         </div>
+
+        {/* Sección Servicios y Precios */}
+
+        <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="p-8">
+        <h3 className="text-lg font-semibold text-black">Servicios y Precios</h3>
+        <hr className="my-2" />
+
+        <div className="mt-2">
+            {servicios.map((servicio, index) => (
+                <div key={index} className="flex justify-between items-center border-b-2 py-2">
+                    {editing ? (
+                        <>
+                            <input 
+                                value={servicio.descripcion}
+                                onChange={(e) => {
+                                    const updatedServicios = [...servicios];
+                                    updatedServicios[index].descripcion = e.target.value;
+                                    setServicios(updatedServicios);
+                                }}
+                            />
+                            <input 
+                                value={servicio.precio}
+                                onChange={(e) => {
+                                    const updatedServicios = [...servicios];
+                                    updatedServicios[index].precio = e.target.value;
+                                    setServicios(updatedServicios);
+                                }}
+                            />
+                            <Button  color="danger" variant="bordered"
+                                onClick={() => {
+                                    const updatedServicios = [...servicios];
+                                    updatedServicios.splice(index, 1);
+                                    setServicios(updatedServicios);
+                                }}
+                            >
+                                Eliminar
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-black">{servicio.descripcion}</span>
+                            <span className="text-black">{servicio.precio}</span>
+                        </>
+                    )}
+                </div>
+            ))}
+        </div>
+        
+        {editing && (
+            <Button  color="secondary" variant="light"
+                onClick={() => {
+                    setServicios([...servicios, { descripcion: "", precio: "" }]);
+                }}
+            >
+                Agregar servicio
+            </Button>
+        )}
+
+
+
+
+{editing && (
+              <div className="flex justify-center space-x-2 mt-4">
+                {/* Contenedor de los botones "Guardar" y "Cancelar" */}
+                <Button color="danger" variant="bordered" onClick={handleCancel}>Cancelar</Button>
+                <Button color="secondary" variant="bordered" onClick={handleSave}>Guardar</Button>
+              </div>
+            )}
+    </div>
+</div>
+
+        
+
+
+
+
+
+
+      </div>
+    </div>
       </div >
       
 
