@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faChevronDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { DropdownHeader } from '../Flowbite/DropdownHeader'
 import { Navbar, Avatar, NavbarBrand, NavbarContent, DropdownMenu, DropdownItem, Dropdown, DropdownTrigger, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Accordion, AccordionItem, Listbox, ListboxItem } from "@nextui-org/react";
 import { Topbar } from './Topbar'
@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 export const Header = () => {
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const redirect = useNavigate()
   const logout = async () => {
@@ -70,6 +69,8 @@ export const Header = () => {
     }
 
   }
+  
+
   return (
     <div className='relative z-10 '>
       <Topbar />
@@ -105,15 +106,15 @@ export const Header = () => {
                       <Button
                         variant="light"
                         endContent={<FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon>}
-                        startContent={<Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
+                        startContent={<Avatar size='sm' showFallback color="secondary" src={`http://localhost:8080/resources/images/${localStorage.getItem("fotoPerfil")}`} />}
                       >
                         {localStorage.getItem("userName")}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu color='secondary' aria-label="Static Actions">
                       <DropdownItem key="new">Mi cuenta</DropdownItem>
-                      <DropdownItem key="copy">Mi perfil</DropdownItem>
-                      <DropdownItem key="edit">Edit file</DropdownItem>
+                      <DropdownItem key="perfil">Mi perfil</DropdownItem>
+                      <DropdownItem key="edit" onPress={() => { redirect('/especialistas/solicitudesTrabajo') }}>Solicitudes de trabajo</DropdownItem>
                       <DropdownItem key="delete" className="text-danger" onPress={() => logout()} color="danger" startContent={<FontAwesomeIcon size='1x' icon={faRightFromBracket}></FontAwesomeIcon>}>
                         Cerrar sesión
                       </DropdownItem>
@@ -128,14 +129,14 @@ export const Header = () => {
                       <Button
                         variant="light"
                         endContent={<FontAwesomeIcon size='xs' icon={faChevronDown}></FontAwesomeIcon>}
-                        startContent={<Avatar size='sm' showFallback color="secondary" src='https://images.unsplash.com/broken' />}
+                        startContent={<Avatar size='sm' showFallback  src={`http://localhost:8080/resources/images/${localStorage.getItem("fotoPerfil")}`} color="secondary"  />}
                       >
                         {localStorage.getItem("userName")}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu color='secondary' aria-label="Static Actions">
-                      <DropdownItem key="new">Mis direcciones</DropdownItem>
-                      <DropdownItem key="copy" onPress={() => { redirect('/clientes/historialTrabajos') }}>Historial</DropdownItem>
+                      <DropdownItem key="cuenta" onPress={() => { redirect('/clientes/cuenta') }}>Mi cuenta</DropdownItem>
+                      <DropdownItem key="historialTrabajo" onPress={() => { redirect('/clientes/historialTrabajos') }}>Historial</DropdownItem>
                       <DropdownItem key="edit">Edit file</DropdownItem>
                       <DropdownItem key="delete" className="text-danger" onPress={() => logout()} color="danger" startContent={<FontAwesomeIcon size='1x' icon={faRightFromBracket}></FontAwesomeIcon>}>
                         Cerrar sesión

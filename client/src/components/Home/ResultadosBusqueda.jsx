@@ -2,12 +2,15 @@ import { Header } from "../Global/Header"
 import { Dropdown, DropdownTrigger, Input, Button, DropdownMenu, DropdownItem, Card, CardBody, CardFooter, CardHeader, Avatar, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react"
 import { faChevronDown, faMagnifyingGlass, faChevronUp, faLocationDot, faAddressCard, faBriefcase, faWrench } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useGlobalState } from "../../../global_states/searchResults"
+import { useNavigate } from "react-router-dom"
+import { v4 } from "uuid"
 
 export const ResultadosBusqueda = () => {
-    const [searchResults] = useGlobalState("searchResults")
+    const [searchResults, setSearchResults] = useState([])
     const [preciosDesde, setPreciosDesde] = useState(new Set(["$100.000"]));
+    const redirect = useNavigate()
 
     const precioDesde = useMemo(
         () => Array.from(preciosDesde).join(", "),
@@ -62,6 +65,10 @@ export const ResultadosBusqueda = () => {
             setColorBusqueda("text-")
         }
     }
+
+    useEffect(() => {
+        setSearchResults( JSON.parse(localStorage.getItem("searchResults")))
+    }, [])
 
     return (
         <>
@@ -232,14 +239,15 @@ export const ResultadosBusqueda = () => {
 
                 <div className="px-16 sm:flex sm:flex-col sm:justify-between lg:px-36 2xl:px-64  p-5">
                     <h1 className="text-[1.8rem] font-[500] ">Resultados de la búsqueda</h1>
-                    <h4 className="text-[1.1rem] font-[500] ">Informáticos en Los Ángeles</h4>
+                    <h4 className="text-[1.1rem] font-[500] ">{localStorage.getItem("rubro")} en {localStorage.getItem("comuna")}</h4>
+                    
                     {
                         searchResults.map((especialista) => {
                             return (
-                                <Card key={especialista._id} className="mt-2">
+                                <Card key={`${v4()}_${especialista._id}`} className="mt-2">
                                     <CardHeader className="justify-between">
                                         <div className="flex gap-5">
-                                            <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src='https://images.unsplash.com/broken' />
+                                            <Avatar color="secondary" isBordered radius="full" size="lg" showFallback src={`http://localhost:8080/resources/images/${especialista.perfil.foto}`} />
                                             <div className="flex flex-col gap-1 items-start justify-center">
                                                 <h4 className="text-small font-semibold leading-none text-default-600">{`${especialista.nombres} ${especialista.apellidos}`}</h4>
                                                 <h5 className="text-small tracking-tight text-default-400">{especialista.profesion}</h5>
@@ -252,7 +260,7 @@ export const ResultadosBusqueda = () => {
                                             <span>
                                                 <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faLocationDot} />
                                             </span>
-                                             {especialista.comuna}
+                                            {especialista.comuna}
                                         </span>
                                         <p>
                                             <span><FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faAddressCard} /></span>
@@ -268,50 +276,33 @@ export const ResultadosBusqueda = () => {
                                             <span>
                                                 <FontAwesomeIcon className="text-md text-default-500 pr-2" icon={faWrench} />
                                             </span>
-                                            <Popover color="none" size="sm" placement="bottom">
-                                                <PopoverTrigger>
-                                                    <Button className="text-default-500 " variant="light"><span className="text-xs">Configurar PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <div className="px-1 py-2">
-                                                        <div className="text-small font-bold">$100.000</div>
-                                                    </div>
-                                                </PopoverContent>
-                                            </Popover>
+                                            {especialista.perfil.servicios.map(servicio => {
+                                                return (
+                                                    <>
+                                                        <Popover color="none" size="sm" placement="bottom">
+                                                            <PopoverTrigger>
+                                                                <Button className="text-default-500 " variant="light"><span className="text-xs">{Object.keys(servicio)[0]} <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent>
+                                                                <div className="px-1 py-2">
+                                                                    <div className="text-small font-bold">${Object.values(servicio)[0]}</div>
+                                                                </div>
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    </>
+                                                )
+                                            })}
 
-                                            <Popover color="none" size="sm" placement="bottom">
-                                                <PopoverTrigger>
-                                                    <Button className="text-default-500" variant="light"><span className="text-xs">Ensamble de PC <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <div className="px-1 py-2">
-                                                        <div className="text-small font-bold">$100.000</div>
-                                                    </div>
-                                                </PopoverContent>
-                                            </Popover>
-
-
-                                            <Popover color="none" size="sm" placement="bottom">
-                                                <PopoverTrigger>
-                                                    <Button className="text-default-500" variant="light"><span className="text-xs">Formatear <br /><small>Ver precio <FontAwesomeIcon size="xs" icon={faChevronDown} /></small></span></Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <div className="px-1 py-2">
-                                                        <div className="text-small font-bold">$100.000</div>
-                                                    </div>
-                                                </PopoverContent>
-                                            </Popover>
                                         </span>
                                     </CardBody>
                                     <CardFooter className="gap-3 flex justify-between">
                                         <p className="font-semibold text-green-400 text-small">{especialista.disponibilidad}</p>
-                                        <Button color="secondary" className="">Visitar perfil</Button>
+                                        <Button color="secondary" className="" type="button" onClick={() => redirect("/buscar/perfilEspecialista", localStorage.setItem("perfilEspecialista", JSON.stringify(especialista)))}>Visitar perfil</Button>
                                     </CardFooter>
                                 </Card>
                             )
                         })
                     }
-
 
                 </div>
             </div>

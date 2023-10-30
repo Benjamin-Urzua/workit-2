@@ -9,6 +9,7 @@ const perfil =  mongoose.Schema({
     comentarios: Array //array de id de comentarios
 })
 
+
 const Especialista = mongoose.Schema({
     nombres: String,
     apellidos: String,
@@ -33,7 +34,8 @@ const Especialista = mongoose.Schema({
     perfil: {
         type: perfil,
         default: {}
-    }
+    },
+    solicitudes_trabajo : Array
 })
 
 module.exports = mongoose.model("Especialista", Especialista)

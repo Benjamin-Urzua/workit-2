@@ -23,6 +23,7 @@ router.post("/admin/deleteEspecialista", adminController.deleteEspecialista)
 router.post("/especialistas/login", especialistasController.login)
 router.post("/especialistas/register", especialistasController.register)
 router.post("/especialistas/editarPerfil", especialistasController.editarPerfil)
+router.get("/especialistas/getPerfil", especialistasController.getPerfil)
 router.post("/especialistas/logout", especialistasController.logout)
 
 //CLIENTES
@@ -30,5 +31,8 @@ router.post("/especialistas/logout", especialistasController.logout)
 router.post("/clientes/login", clientesController.login)
 router.post("/clientes/register", clientesController.register)
 router.post("/clientes/logout", clientesController.logout)
+router.post("/clientes/getCuenta", clientesController.getCuenta)
+router.post("/clientes/editarCuenta", clientesController.editarCuenta)
+router.post("/clientes/solicitarTrabajo", clientesController.solicitarTrabajo)
 router.post("/buscar", clientesController.buscarEspecialista)
 module.exports = router

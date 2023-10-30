@@ -4,6 +4,7 @@ import { AdminProfesionales } from "./AdminProfesionales"
 import { AdminClientes } from "./AdminClientes"
 import { AdminReportes } from "./AdminReportes"
 import { AdminLogin } from "./AdminLogin"
+import { AdminSolicitudes } from "./AdminSolicitudes"
 export const Admin = () => {
     const [vista] = useGlobalState("vistaAdmin")
     return (
@@ -15,7 +16,9 @@ export const Admin = () => {
                         ? <><NavBar></NavBar> <AdminClientes ></AdminClientes></>
                         : (vista == "profesionales")
                             ? <><NavBar></NavBar> <AdminProfesionales ></AdminProfesionales></>
-                            : <><NavBar></NavBar> <AdminReportes></AdminReportes></>
+                            : (vista == "reportes")
+                                ? <><NavBar></NavBar> <AdminReportes></AdminReportes></>
+                                : <><NavBar></NavBar> <AdminSolicitudes></AdminSolicitudes></>
             }
 
         </>

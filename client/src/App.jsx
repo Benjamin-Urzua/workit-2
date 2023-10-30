@@ -8,16 +8,35 @@ import { RegisterEspecialista } from "./components/Especialistas/RegisterEspecia
 import { Home } from "./components/Home/Home"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { ResultadosBusqueda } from "./components/Home/ResultadosBusqueda"
-import { ConfiguracionCliente} from "./components/Clientes/ConfiguracionCliente"
-import { NotFoundPage} from "./components/Global/NotFoundPage"
+import { ConfiguracionCliente } from "./components/Clientes/ConfiguracionCliente"
+import { NotFoundPage } from "./components/Global/NotFoundPage"
 import { SesionExpirada } from "./components/Global/SesionExpirada"
 import { Admin } from "./components/Admin/Admin"
 import { PerfilInicial } from "./components/Especialistas/PerfilInicial"
 import { PerfilEspecialista } from "./components/Especialistas/PerfilEspecialista"
-
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
+import { SolicitudesTrabajo } from "./components/Especialistas/SolicitudesTrabajo"
 const App = () => {
+  //const [socket, setSocket] = useState()
+
+  /*
+  useEffect(() => {
+    if (localStorage.getItem("user_id")) {
+      const _socket = (io("http://localhost:8080", {
+        auth: {
+          _id: localStorage.getItem("user_id")
+        }
+      }))
+      _socket.on('connect', () => {
+        console.log("socket conectado");
+        setSocket(_socket)
+      })
+    }
+  }, [])
+  */
   return (
-    <main>
+    < main >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -27,15 +46,20 @@ const App = () => {
           <Route path="/especialistas/login" element={<LoginEspecialista />} />
           <Route path="/especialistas/register" element={<RegisterEspecialista />} />
           <Route path="/especialistas/register/perfilInicial" element={<PerfilInicial />} />
+          <Route path="/especialistas/solicitudesTrabajo" element={<SolicitudesTrabajo />} />
           <Route path="/clientes/historialTrabajos" element={<HistorialTrabajos />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} />
+          <Route path="/buscar/perfilEspecialista" element={<PerfilEspecialista socket={io("http://localhost:8080", {
+            auth: {
+              _id: localStorage.getItem("user_id")
+            }
+          })} />} />
           <Route path="/error" element={<NotFoundPage />} />
           <Route path="/sesionexpirada" element={<SesionExpirada />} />
-          <Route path="/especialistas/perfil" element={<PerfilEspecialista/>} />
-          <Route path="/clientes/configuracionClientes" element={<ConfiguracionCliente/>}></Route>
+          <Route path="/clientes/cuenta" element={<ConfiguracionCliente />}></Route>
         </Routes>
       </BrowserRouter>
-    </main>
+    </main >
   )
 }
 

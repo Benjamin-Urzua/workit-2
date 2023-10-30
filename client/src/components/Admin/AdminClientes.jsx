@@ -8,8 +8,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const statusColorMap = {
-  activo: "success",
-  baneado: "warning",
+  true: "success",
+  false: "warning",
 };
 
 
@@ -248,29 +248,33 @@ export const AdminClientes = () => {
           <User
             avatarProps={{ radius: "lg", src: user.avatar }}
             description={user.email}
-            name={cellValue}
+            name={`${user.nombres} ${user.apellidos}`}
           >
-            {user.email}
           </User>
         );
       case "fecha_registro":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
+            <p className="text-bold text-sm capitalize">{user.fechaRegistro}</p>
+            <p className="text-bold text-sm capitalize text-default-400"></p>
           </div>
         );
       case "estado":
         return (
+          
           <Chip className="capitalize" color={statusColorMap[user.estado]} size="sm" variant="flat">
-            {cellValue}
+            {
+              (user.estado)
+              ? <>Activo</>
+              : <>Baneado</>
+            }
           </Chip>
         );
       case "trabajos_solicitados":
         return (
           <Tooltip content={user.content}>
             <Chip className="capitalize" color="secondary" size="sm" variant="solid">
-              {cellValue}
+              Ninguno
             </Chip>
           </Tooltip>
 
@@ -376,7 +380,7 @@ export const AdminClientes = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={clientes}>
+        <TableBody items={clientes} emptyContent={"No hay clientes."}>
           {(cliente) => (
             <TableRow key={cliente._id}>
               {(columnKey) => <TableCell>{renderCell(cliente, columnKey)}</TableCell>}

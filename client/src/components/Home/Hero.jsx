@@ -31,9 +31,15 @@ export const Hero = () => {
     await fetch('http://localhost:8080/buscar', { method: 'POST', body: body, headers: headers })
       .then(res => res.json().then(msg => {
         const ReactSwal = withReactContent(Swal)
+        const redirectParameters = () => {
+
+          localStorage.setItem("searchResults", JSON.stringify(msg["data"]));
+          localStorage.setItem("comuna", comuna);
+          localStorage.setItem("rubro", rubro)
+        }
         switch (msg["codigo"]) {
           case 1:
-              redirect("/buscar", setGlobalState("searchResults", msg["data"]))
+            redirect("/buscar", redirectParameters())
             break;
           case 2:
             ReactSwal.fire({
@@ -75,6 +81,7 @@ export const Hero = () => {
                     <option>Informática</option>
                     <option>Construcción</option>
                     <option>Electricidad</option>
+                    <option>Mecánica</option>
                   </select>
 
                 </div>
@@ -118,7 +125,7 @@ export const Hero = () => {
 
               </div>
               <div className="flex justify-center mt-4">
-              <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
+                <a href="#" className="text-sm text-Primary hover:underline block mt-2">Ver más</a>
               </div>
             </div>
           </div>

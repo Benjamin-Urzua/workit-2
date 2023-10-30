@@ -8,12 +8,12 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const statusColorMap = {
-  activo: "success",
-  baneado: "warning",
+  true: "success",
+  false: "warning",
 };
 const statusColorMap2 = {
-  premium: "secondary",
-  corriente: "warning",
+  Premium: "secondary",
+  Corriente: "primary",
 };
 
 export const AdminProfesionales = () => {
@@ -229,13 +229,13 @@ export const AdminProfesionales = () => {
   const renderCell = useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
 
-    switch (columnKey) {
+    switch (columnKey) { 
       case "usuario":
         return (
           <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
+            avatarProps={{ radius: "lg", src: `http://localhost:8080/resources/images/${user.perfil.foto}` }}
             description={user.email}
-            name={cellValue}
+            name={`${user.nombres} ${user.apellidos}`}
           >
             {user.email}
           </User>
@@ -243,21 +243,25 @@ export const AdminProfesionales = () => {
       case "fecha_registro":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
+            <p className="text-bold text-sm capitalize">{user.fechaRegistro}</p>
+            <p className="text-bold text-sm capitalize text-default-400"></p>
           </div>
         );
       case "estado":
         return (
           <Chip className="capitalize" color={statusColorMap[user.estado]} size="sm" variant="flat">
-            {cellValue}
+            {
+              (user.estado)
+              ? <>Activo</>
+              : <>Baneado</>
+            }
           </Chip>
         );
       case "tipo_usuario":
         return (
           <Tooltip content={user.content}>
-            <Chip className="capitalize" color={statusColorMap2[user.tipo_usuario]} size="sm" variant="solid">
-              {cellValue}
+            <Chip className="capitalize" color={statusColorMap2[user.plan]} size="sm" variant="solid">
+              {user.plan}
             </Chip>
           </Tooltip>
 
@@ -364,7 +368,7 @@ export const AdminProfesionales = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={especialistas}>
+        <TableBody items={especialistas} emptyContent={"No hay especialistas."}>
           {(especialista) => (
             <TableRow key={especialista._id}>
               {(columnKey) => <TableCell>{renderCell(especialista, columnKey)}</TableCell>}

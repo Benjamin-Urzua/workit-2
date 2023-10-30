@@ -10,12 +10,13 @@ module.exports.register = async (req, res) => {
         //console.log("folder: ", docsFolder)
         var titulos = []
         var numeroTitulo = 0
+        let formatoArchivo
         form.on('fileBegin', (formName, file) => {
             if (formName.includes("tituloProfesional")) {
                 numeroTitulo++
-                const formatoArchivo = file.mimetype.slice(6)
+                formatoArchivo = file.mimetype.slice(6)
                 const nombreArchivo = formName.replace("tituloProfesional", `tituloProfesional${numeroTitulo}`)
-                titulos.push(nombreArchivo)
+                titulos.push(`${nombreArchivo}.${formatoArchivo}`)
                 let nuevoArchivo = file
                 nuevoArchivo.filepath = `${docsFolder}/${nombreArchivo}.${formatoArchivo}`
                 nuevoArchivo.newFilename = nombreArchivo
@@ -41,11 +42,11 @@ module.exports.register = async (req, res) => {
                         return ["titulos", titulos]
                     } else {
                         if (file[0].newFilename.includes("cedIdentidad")) {
-                            return ["cedIdentidad", file[0].newFilename]
+                            return ["cedIdentidad", `${file[0].newFilename}.${formatoArchivo}`]
                         } else if (file[0].newFilename.includes("certResidencia")) {
-                            return ["certResidencia", file[0].newFilename]
+                            return ["certResidencia", `${file[0].newFilename}.${formatoArchivo}`]
                         } else {
-                            return ["certAntecedentes", file[0].newFilename]
+                            return ["certAntecedentes", `${file[0].newFilename}.${formatoArchivo}`]
                         }
 
                     }
@@ -72,7 +73,8 @@ module.exports.register = async (req, res) => {
                     profesion: fields["profesion"][0],
                     disponibilidad: "Disponible",
                     estado: true,
-                    plan: "Corriente"
+                    plan: "Corriente",
+                    fechaRegistro: new Date()
                 })
                 await especialista.save()
                     .then((result) => {
@@ -98,10 +100,10 @@ module.exports.editarPerfil = async (req, res) => {
         const form = new formidable.IncomingForm()
         const docsFolder = path.join(__dirname, "../../resources", "images")
 
-
+        let formatoArchivo
         form.on('fileBegin', (formName, file) => {
-            const formatoArchivo = file.mimetype.slice(6)
-            const nombreArchivo = `fotoPerfil#${formName}`
+            formatoArchivo = file.mimetype.slice(6)
+            const nombreArchivo = `fotoPerfil_${formName}`
             let nuevoArchivo = file
             nuevoArchivo.filepath = `${docsFolder}/${nombreArchivo}.${formatoArchivo}`
             nuevoArchivo.newFilename = nombreArchivo
@@ -137,7 +139,7 @@ module.exports.editarPerfil = async (req, res) => {
                 })
 
                 const perfil = {
-                    foto: Object.values(files)[0][0].newFilename,
+                    foto: `${Object.values(files)[0][0].newFilename}.${formatoArchivo}`,
                     experiencia: fields["experiencia"].toString(),
                     antiguedad: 0,
                     trabajosRealizados: [],
@@ -173,7 +175,6 @@ module.exports.editarPerfil = async (req, res) => {
 module.exports.login = async (req, res) => {
     try {
         const data = req.body
-        console.log(data["email"])
         await modelEspecialista.findOne({ email: data["email"] })
             .exec()
             .then(
@@ -183,12 +184,13 @@ module.exports.login = async (req, res) => {
                             console.log("La contraseña no coincide")
                             res.status(200).json({ codigo: 2, msg: "La contraseña no coincide" })
                         } else {
+                            console.log(especialista)
                             req.session.regenerate(err => {
                                 if (err) next(err)
                                 req.session.user = especialista["_id"]
                                 req.session.save((err) => {
                                     if (err) { console.log(next(err)); res.status(200).json({ msg: err }) }
-                                    res.status(200).json({ codigo: 1, userName: especialista["nombres"].substr(0, especialista["nombres"].search(" ")), sessionId: req.session.user, msg: "Sesión iniciada con éxito", tipoUsuario: "Especialista" })
+                                    res.status(200).json({ codigo: 1, userName: especialista["nombres"].substr(0, especialista["nombres"].search(" ")), sessionId: req.session.user, msg: "Sesión iniciada con éxito", tipoUsuario: "Especialista", fotoPerfil: especialista["perfil"]["foto"] })
                                     console.log("Sesión iniciada con éxito")
 
                                 })
@@ -214,6 +216,24 @@ module.exports.logout = async (req, res) => {
             if (err) next(err)
             res.status(200).json({ codigo: 1, msg: "Sesión cerrada con éxito" })
         })
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.getPerfil = async (req, res) => {
+    try {
+        const data = req.body
+        console.log(data)
+        await modelEspecialista.findById(data["_id"])
+        .exec()
+        .then(
+            especialista => {
+                res.status(200).json({ codigo: 1, msg: "Ok", data: especialista.perfil.fotoPerfil })
+            }
+
+        )
     } catch (error) {
         console.log("Ha ocurrido una excepción: ", error)
         res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })

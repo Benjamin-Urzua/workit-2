@@ -6,6 +6,7 @@ import { useState, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import {io} from "socket.io-client"
 
 export const LoginEspecialista = () => {
     const txt_email = useRef()
@@ -52,6 +53,8 @@ export const LoginEspecialista = () => {
                                 localStorage.setItem("user_id", msg['sessionId'])
                                 localStorage.setItem("userName", msg['userName'])
                                 localStorage.setItem("tipoUsuario", msg['tipoUsuario'])
+                                localStorage.setItem("fotoPerfil", msg['fotoPerfil'])
+                                
                                 return redirect("/",
                                     toastLogin.fire({
                                         icon: 'success',
@@ -133,3 +136,5 @@ export const LoginEspecialista = () => {
         </form>
     )
 }
+
+

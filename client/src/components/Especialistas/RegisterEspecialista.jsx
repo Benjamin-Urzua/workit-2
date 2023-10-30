@@ -351,8 +351,8 @@ export const RegisterEspecialista = () => {
                                         <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Cédula de identidad</label>
                                         <Input
                                             className="mb-2"
-                                            id={`fl_cedIdentidad#${run}`}
-                                            name={`fl_cedIdentidad#${run}`}
+                                            id={`fl_cedIdentidad_${run}`}
+                                            name={`fl_cedIdentidad_${run}`}
                                             variant="underlined"
                                             type="file"
                                             onChange={() => handleFileInputs('identidad')}
@@ -373,8 +373,8 @@ export const RegisterEspecialista = () => {
                                     <span>
                                         <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Títulos profesionales</label>
                                         <Input
-                                            id={`fl_tituloProfesional#${run}`}
-                                            name={`fl_tituloProfesional#${run}`}
+                                            id={`fl_tituloProfesional_${run}`}
+                                            name={`fl_tituloProfesional_${run}`}
                                             variant="underlined"
                                             type="file"
                                             multiple
@@ -420,8 +420,8 @@ export const RegisterEspecialista = () => {
                                         <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de residencia</label>
                                         <Input
                                             className="mb-2"
-                                            id={`fl_certResidencia#${run}`}
-                                            name={`fl_certResidencia#${run}`}
+                                            id={`fl_certResidencia_${run}`}
+                                            name={`fl_certResidencia_${run}`}
                                             variant="underlined"
                                             type="file"
                                             onChange={() => handleFileInputs('residencia')}
@@ -440,8 +440,8 @@ export const RegisterEspecialista = () => {
                                     <span>
                                         <label className="block text-sm mb-1 font-medium text-foreground-900 pb-[1.5]">Certificado de antecedentes</label>
                                         <Input
-                                            id={`fl_certAntecedentes#${run}`}
-                                            name={`fl_certAntecedentes#${run}`}
+                                            id={`fl_certAntecedentes_${run}`}
+                                            name={`fl_certAntecedentes_${run}`}
                                             variant="underlined"
                                             type="file"
                                             onChange={() => handleFileInputs('antecedentes')}

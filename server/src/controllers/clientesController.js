@@ -3,6 +3,7 @@ const modelEspecialista = require("../models/Especialista")
 module.exports.register = async (req, res) => {
     try {
         const data = req.body
+        data["fechaRegistro"] = new Date()
         const cliente = new modelCliente(data)
         await cliente.save()
             .then((result) => {
@@ -60,7 +61,7 @@ module.exports.logout = async (req, res) => {
     try {
         req.session.destroy(err => {
             if (err) next(err)
-            res.status(200).json({ codigo: 1, msg: "Sesión cerrada con éxito"})
+            res.status(200).json({ codigo: 1, msg: "Sesión cerrada con éxito" })
         })
     } catch (error) {
         console.log("Ha ocurrido una excepción: ", error)
@@ -71,16 +72,93 @@ module.exports.logout = async (req, res) => {
 module.exports.buscarEspecialista = async (req, res) => {
     try {
         const data = req.body
+        console.log(data)
         await modelEspecialista.find(data).exec()
             .then((results) => {
                 if (results.length > 0) {
                     console.log("Coincidencias: ", results)
-                    res.status(200).json({ codigo: 1, msg: "Han habido coincidencias", data:results })
+                    res.status(200).json({ codigo: 1, msg: "Han habido coincidencias", data: results })
                 } else {
                     console.log("No han habido coincidencias")
-                    res.status(200).json({ codigo: 2, msg: "No han habido coincidencias" })  
+                    res.status(200).json({ codigo: 2, msg: "No han habido coincidencias" })
                 }
             })
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.getCuenta = async (req, res) => {
+    try {
+        const data = req.body
+        await modelCliente.findOne({ _id: data["_id"] })
+            .exec()
+            .then(cliente => {
+                if (cliente != null) {
+                    console.log("Hubieron coincidencias")
+                    res.status(200).json({ codigo: 1, msg: "Hubieron coincidencias", data: cliente })
+                } else {
+                    console.log("No hubieron coincidencias")
+                    res.status(200).json({ codigo: 2, msg: "No hubieron coincidencias" })
+                }
+            })
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.editarCuenta = async (req, res) => {
+    try {
+        const data = req.body
+        const _id = data["_id"]
+        delete data["_id"]
+        await modelCliente.findByIdAndUpdate(_id, data)
+            .exec()
+            .then(cliente => {
+                if (cliente != null) {
+                    console.log("Usuario actualizado correctamente")
+                    res.status(200).json({ codigo: 1, msg: "Usuario actualizado correctamente" })
+                } else {
+                    console.log("No hubieron coincidencias")
+                    res.status(200).json({ codigo: 2, msg: "No hubieron coincidencias" })
+                }
+            })
+
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+}
+
+module.exports.solicitarTrabajo = async (req, res) => {
+    try {
+        const data = req.body
+        await modelEspecialista.findById(data["especialista"], 'solicitudes_trabajo').exec()
+            .then((results) => {
+                if (results != null) {
+                    let solicitudes_trabajo = results["solicitudes_trabajo"]
+                    solicitudes_trabajo.push({ cliente: data["cliente"], servicio: data["servicio"], fechaInicio: data["fechaInicio"], descripcion: data["descripcion"] })
+                    modelEspecialista.findByIdAndUpdate(data["especialista"], { solicitudes_trabajo: solicitudes_trabajo }).exec()
+                        .then((results) => {
+                            if (results != null) {
+                                console.log("Reserva concretada");
+                                res.status(200).json({ codigo: 1, msg: "Reserva concretada", data: results })
+                            } else {
+                                console.log("No se ha hecho la reserva");
+                                res.status(200).json({ codigo: 2, msg: "No se ha hecho la reserva" })
+                            }
+
+                        })
+
+                } else {
+                    console.log("No se ha hecho la reserva");
+                    res.status(200).json({ codigo: 2, msg: "No se ha hecho la reserva" })
+                }
+
+            })
+
     } catch (error) {
         console.log("Ha ocurrido una excepción: ", error)
         res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })

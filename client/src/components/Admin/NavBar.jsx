@@ -63,7 +63,7 @@ export const NavBar = () => {
                                 Clientes
                             </Link>
                             :
-                            <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e, "cliente")}>
+                            <Link className="text-default-500 hover:text-Primary hover:underline" onClick={(e) => handleVista(e, "cliente")}>
                                 Clientes
                             </Link>
                     }
@@ -78,7 +78,7 @@ export const NavBar = () => {
                                 Profesionales
                             </Link>
                             :
-                            <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e, "profesionales")} to="#" aria-current="page">
+                            <Link className="text-default-500 hover:text-Primary hover:underline" onClick={(e) => handleVista(e, "profesionales")} to="#" aria-current="page">
                                 Profesionales
                             </Link>
                     }
@@ -86,15 +86,31 @@ export const NavBar = () => {
                 <NavbarItem>
 
                     {
-                        (vista !== "profesionales" && vista !== "cliente")
+                        (vista  == "reportes")
                             ?
 
                             <Link className="text-Primary" onClick={(e) => handleVista(e, "reportes")} to="#">
                                 Reportes
                             </Link>
                             :
-                            <Link className="text-default-500 hover:text-Primary" onClick={(e) => handleVista(e, "reportes")} to="#">
+                            <Link className="text-default-500 hover:text-Primary hover:underline" onClick={(e) => handleVista(e, "reportes")} to="#">
                                 Reportes
+                            </Link>
+                    }
+                </NavbarItem>
+
+                <NavbarItem>
+
+                    {
+                        (vista == "solicitudes")
+                            ?
+
+                            <Link className="text-Primary" onClick={(e) => handleVista(e, "solicitudes")} to="#">
+                                Solicitudes
+                            </Link>
+                            :
+                            <Link className="text-default-500 hover:text-Primary hover:underline" onClick={(e) => handleVista(e, "solicitudes")} to="#">
+                                Solicitudes
                             </Link>
                     }
                 </NavbarItem>
