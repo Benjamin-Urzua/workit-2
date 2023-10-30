@@ -14,9 +14,14 @@ import { SesionExpirada } from "./components/Global/SesionExpirada"
 import { Admin } from "./components/Admin/Admin"
 import { PerfilInicial } from "./components/Especialistas/PerfilInicial"
 import { PerfilEspecialista } from "./components/Especialistas/PerfilEspecialista"
+<<<<<<< HEAD
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 import { SolicitudesTrabajo } from "./components/Especialistas/SolicitudesTrabajo"
+=======
+import { EditarPerfil } from "./components/Especialistas/EditarPerfil"
+
+>>>>>>> 591f49404c22e0ee017d97b2927a95f4d66fb28a
 const App = () => {
   //const [socket, setSocket] = useState()
 
@@ -55,8 +60,15 @@ const App = () => {
             }
           })} />} />
           <Route path="/error" element={<NotFoundPage />} />
+          <Route path="/editarperfil" element={<EditarPerfil/>}/>
           <Route path="/sesionexpirada" element={<SesionExpirada />} />
+<<<<<<< HEAD
           <Route path="/clientes/cuenta" element={<ConfiguracionCliente />}></Route>
+=======
+          <Route path="/especialistas/perfil" element={<PerfilEspecialista/>} />
+          <Route path="/clientes/configuracionClientes" element={<ConfiguracionCliente/>}></Route>
+          
+>>>>>>> 591f49404c22e0ee017d97b2927a95f4d66fb28a
         </Routes>
       </BrowserRouter>
     </main >
