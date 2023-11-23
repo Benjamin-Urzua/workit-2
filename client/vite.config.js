@@ -12,7 +12,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    react(),
-    "react-activation/babel"
+    react()
   ],
 })
