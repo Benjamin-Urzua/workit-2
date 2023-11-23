@@ -7,7 +7,7 @@ export const Topbar = () => {
         <section className="hidden md:flex text-[14px] p-2 px-32 text-white place-content-between font-['Open Sans', sans-serif]  bg-Secondary">
             <span>
                 <span>
-                    <FontAwesomeIcon className='mr-1' icon={faEnvelope} /><a href="">soporte@workit.cl</a>
+                    <FontAwesomeIcon className='mr-1' icon={faEnvelope} /><a href="">soporte@emplify.cl</a>
                 </span>
                 <span className='ml-3' >
                     <FontAwesomeIcon className='mr-1' icon={faMobileRetro} />+569 123123123

@@ -139,7 +139,7 @@ module.exports.solicitarTrabajo = async (req, res) => {
             .then((results) => {
                 if (results != null) {
                     let solicitudes_trabajo = results["solicitudes_trabajo"]
-                    solicitudes_trabajo.push({ cliente: data["cliente"], servicio: data["servicio"], fechaInicio: data["fechaInicio"], descripcion: data["descripcion"] })
+                    solicitudes_trabajo.push(data)
                     modelEspecialista.findByIdAndUpdate(data["especialista"], { solicitudes_trabajo: solicitudes_trabajo }).exec()
                         .then((results) => {
                             if (results != null) {

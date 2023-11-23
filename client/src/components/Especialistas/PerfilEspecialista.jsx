@@ -4,9 +4,11 @@ import { Footer } from "../Global/Footer"
 import { Chat } from '../Global/Chat';
 import { Button, Card, CardBody, CardFooter, CardHeader, Avatar, Popover, PopoverTrigger, PopoverContent, Textarea, Input, Image, Select, SelectItem } from "@nextui-org/react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faHeart, faStar} from "@fortawesome/free-regular-svg-icons"
+import { faPhotoFilm, faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { v4 } from "uuid"
 
 export const PerfilEspecialista = (socket) => {
     const [showChat, setShowChat] = useState("hidden")
@@ -41,11 +43,14 @@ export const PerfilEspecialista = (socket) => {
 
         const body = JSON.stringify(
             {
+                estado: "",
                 cliente: localStorage.getItem("user_id"),
                 especialista: especialista._id,
-                servicio: servicio,
                 fechaInicio: fechaInicio,
-                descripcion: descripcion
+                fechaFin: "",
+                descripcion: descripcion,
+                servicio: servicio,
+                foto: ""
             }
         )
         const headers = {
@@ -257,25 +262,35 @@ export const PerfilEspecialista = (socket) => {
                             <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
                                 {/* Sección Opiniones */}
                                 <div className="p-8">
-                                    <h3 className="text-lg font-semibold text-black">Opiniones (50)</h3>
-                                    <hr className="my-2" />
-
-                                    <div className="flex items-center mt-2">
+                                    <h3 className="text-lg font-semibold text-black">Opiniones (50) <div className="flex items-center mt-2">
                                         <span className="text-black text-xl">4.8 </span>
                                         <div className="flex text-yellow-500 ml-2">
 
                                             ★★★★★
                                         </div>
-                                    </div>
-
+                                    </div></h3>
+                                    <hr className="my-2" />
                                     <div className="mt-4">
                                         <div className="flex items-start border-b-2 py-2">
-                                            <Avatar className='z-0' color="secondary" isBordered radius="full" size="md" showFallback src='https://i.pravatar.cc/150?u=a04258114e29026708c' />
+                                            <Avatar className='z-0' color="secondary" isBordered radius="full" size="md" showFallback />
 
                                             <div className="ml-4">
-                                                <span className="text-black font-semibold">Usuario 1</span>
-                                                <p className="text-gray-500 text-sm">12 de Septiembre, 2023</p> {/* Aquí va la fecha del comentario */}
-                                                <p className="text-black">¡Excelente servicio! Muy profesional y resolutivo.”</p>
+                                                <span className="text-black font-semibold">{localStorage.getItem("userName")}</span>
+                                                <br />
+                                                <Textarea
+                                                    minRows={2}
+
+                                                    className='w-[500px]'
+                                                    placeholder='Escribe un comentario...'
+                                                >
+                                                </Textarea>
+                                                <section className='flex justify-between items-center'>
+                                                    <Button className='mt-2' variant='bordered' color='secondary'>Subir evidencias <FontAwesomeIcon icon={faPhotoFilm}></FontAwesomeIcon></Button>
+                                                    <span className="text-center text-Secondary font-sans">
+                                                       Calificar: <FontAwesomeIcon  icon={faStarSolid}></FontAwesomeIcon> <FontAwesomeIcon  icon={faStarSolid}></FontAwesomeIcon> <FontAwesomeIcon  icon={faStarSolid}></FontAwesomeIcon> 
+                                                    </span>
+                                                    <Button className='mt-2' color='secondary'>Publicar</Button>
+                                                </section>
                                             </div>
                                         </div>
                                     </div>
@@ -326,7 +341,7 @@ export const PerfilEspecialista = (socket) => {
                     <div className='relative z-20 w-full md:w-1/2 p-4'>
                         <div className="sticky top-3">
                             <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
-                                <h2 className="text-2xl font-semibold mb-4">Reservar Cita</h2>
+                                <h2 className="text-2xl font-semibold mb-4">Contratar especialista</h2>
                                 <label htmlFor="trabajo" className="block text-sm font-medium text-gray-700">Elige tu servicio:</label>
                                 <Select
                                     id="trabajo"
@@ -339,7 +354,7 @@ export const PerfilEspecialista = (socket) => {
                                     {(servicio) => <SelectItem key={Object.keys(servicio)[0]}>{Object.keys(servicio)[0]}</SelectItem>}
                                 </Select>
 
-                                <label htmlFor="fecha" className="block text-sm font-medium text-gray-700 mt-4">Fecha de la Cita:</label>
+                                <label htmlFor="fecha" className="block text-sm font-medium text-gray-700 mt-4">Fecha de inicio:</label>
                                 <Input
                                     type="date"
                                     id="fecha"
@@ -361,7 +376,7 @@ export const PerfilEspecialista = (socket) => {
 
 
 
-                                <Button onClick={reservarCita} color="secondary" className="mt-4 w-full px-3 py-2">Reservar</Button>
+                                <Button onClick={reservarCita} color="secondary" className="mt-4 w-full px-3 py-2">Solicitar</Button>
 
                                 {isModalOpen && (
                                     <div className="fixed z-30 inset-0 overflow-y-auto">

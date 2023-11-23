@@ -81,7 +81,7 @@ export const Header = () => {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.</span></Link>
+            <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Empl<span className="text-Primary">ify</span></Link>
           </NavbarBrand>
         </NavbarContent>
 

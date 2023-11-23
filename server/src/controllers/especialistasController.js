@@ -1,4 +1,6 @@
 const modelEspecialista = require("../models/Especialista")
+const modelCliente = require("../models/Cliente")
+const modelTrabajo = require("../models/Trabajo")
 const formidable = require("formidable")
 
 const path = require('path')
@@ -162,7 +164,7 @@ module.exports.editarPerfil = async (req, res) => {
                             }
                         }
                     )
-                
+
             }
 
         });
@@ -225,17 +227,156 @@ module.exports.logout = async (req, res) => {
 module.exports.getPerfil = async (req, res) => {
     try {
         const data = req.body
-        console.log(data)
         await modelEspecialista.findById(data["_id"])
-        .exec()
-        .then(
-            especialista => {
-                res.status(200).json({ codigo: 1, msg: "Ok", data: especialista.perfil.fotoPerfil })
-            }
+            .exec()
+            .then(
+                especialista => {
+                    res.status(200).json({ codigo: 1, msg: "Ok", data: especialista.perfil.fotoPerfil })
+                }
 
-        )
+            )
     } catch (error) {
         console.log("Ha ocurrido una excepción: ", error)
         res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
     }
+}
+
+module.exports.getSolicitudesTrabajos = async (req, res) => {
+    try {
+        const data = req.body
+        const results = await modelEspecialista.findById(data["_id"], "solicitudes_trabajo").exec()
+
+        const solicitudesTrabajos = await Promise.all(results.solicitudes_trabajo.map(async (solicitud) => {
+            const clienteData = await modelCliente.findById(solicitud.cliente, "nombres apellidos").exec();
+            const cliente = `${clienteData.nombres} ${clienteData.apellidos}`;
+            solicitud.nombreCliente = cliente;
+            return solicitud;
+        }))
+        res.status(200).json({ codigo: 1, msg: "Ok", data: solicitudesTrabajos })
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+
+}
+
+
+module.exports.aceptarTrabajo = async (req, res) => {
+    try {
+        const data = req.body
+        const trabajo = data["trabajo"]
+        const solicitudes_trabajo = data["solicitudes"]
+
+        const Trabajo = new modelTrabajo(trabajo)
+        await Trabajo.save()
+            .then((result) => {
+                if (result != null) {
+                    const idNuevoTrabajo = result["_id"]
+                    modelEspecialista.findByIdAndUpdate(trabajo.especialista, { solicitudes_trabajo: solicitudes_trabajo }).exec()
+                        .then(
+                            result => {
+                                console.log(result);
+                                if (result) {
+                                    modelEspecialista.findById(trabajo.especialista, "perfil").exec()
+                                        .then(
+                                            result => {
+                                                const perfil = result["perfil"]
+                                                const trabajosRealizados = perfil["trabajosRealizados"]
+                                                trabajosRealizados.push(idNuevoTrabajo)
+                                                perfil["trabajosRealizados"] = trabajosRealizados
+                                                modelEspecialista.findByIdAndUpdate(trabajo.especialista, { perfil: perfil }).exec()
+                                                    .then(
+                                                        result => {
+                                                            if (result) {
+                                                                console.log("Trabajo creado")
+                                                                res.status(200).json({ codigo: 1, msg: "Trabajo creado" })
+                                                            } else {
+                                                                console.log("Algo ha ocurrido al actualizar perfil. No hubieron cambios")
+                                                                res.status(200).json({ codigo: 2, msg: "Algo ha ocurrido al actualizar perfil. No hubieron cambios" })
+                                                            }
+                                                        }
+                                                    )
+
+
+                                            }
+                                        )
+
+                                } else {
+                                    console.log("Algo ha ocurrido al actualizar solicitudes. No hubieron cambios")
+                                    res.status(200).json({ codigo: 2, msg: "Algo ha ocurrido al actualizar solicitudes. No hubieron cambios" })
+                                }
+                            }
+                        )
+                } else {
+                    res.status(200).json({ codigo: 2, msg: "Algo salio mal..." })
+                    console.log("Algo salio mal...")
+                }
+            });
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+
+}
+
+module.exports.trabajosEnCurso = async (req, res) => {
+    try {
+        const data = req.body
+        const trabajos = await modelTrabajo.find({ especialista: data["_id"], estado:"Activo" }).exec()
+        if (trabajos.length > 0) {
+            const trabajosEnCurso = await Promise.all(trabajos.map(async (trabajo) => {
+                const clienteData = await modelCliente.findById(trabajo.cliente, "nombres apellidos").exec();
+                const cliente = `${clienteData.nombres} ${clienteData.apellidos}`;
+                const trabajoModificado = { ...trabajo.toObject(), nombreCliente: cliente };
+                return trabajoModificado;
+            }))
+            console.log("Trabajos encontrados: ", trabajosEnCurso)
+            res.status(200).json({ codigo: 1, msg: "Trabajos encontrados", data: trabajosEnCurso })
+        } else {
+            console.log("No hay trabajos")
+            res.status(200).json({ codigo: 2, msg: "No hay trabajos terminados", data: trabajos })
+        }
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+
+}
+
+module.exports.trabajosTerminados = async (req, res) => {
+    try {
+        const data = req.body
+        const trabajos = await modelTrabajo.find({especialista: data["_id"], estado:"Terminado" })
+        if (trabajos.length > 0) {
+            const trabajosEnCurso = await Promise.all(trabajos.map(async (trabajo) => {
+                const clienteData = await modelCliente.findById(trabajo.cliente, "nombres apellidos").exec();
+                const cliente = `${clienteData.nombres} ${clienteData.apellidos}`;
+                const trabajoModificado = { ...trabajo.toObject(), nombreCliente: cliente };
+                return trabajoModificado;
+            }))
+            console.log("Trabajos encontrados: ", trabajosEnCurso)
+            res.status(200).json({ codigo: 1, msg: "Trabajos encontrados", data: trabajosEnCurso })
+        } else {
+            console.log("No hay trabajos")
+            res.status(200).json({ codigo: 2, msg: "No hay trabajos en curso", data: trabajos })
+        }
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+
+}
+
+module.exports.finalizarTrabajo = async (req, res) => {
+    try {
+        const data = req.body
+        await modelTrabajo.findByIdAndUpdate(data["_id"], {estado:"Terminado"}).exec().then(trabajo => {
+            res.status(200).json({ codigo: 1, msg: "Trabajo terminado" })
+        })
+        
+    } catch (error) {
+        console.log("Ha ocurrido una excepción: ", error)
+        res.status(200).json({ codigo: 10, msg: `Ha ocurrido una excepción: ${error}` })
+    }
+
 }

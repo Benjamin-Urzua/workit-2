@@ -131,9 +131,9 @@ export const RegisterCliente = () => {
                     <h4 className="text-[1.25rem] font-[500] mb-10">¡Regístrate con nosotros para obtener al profesional que necesitas!</h4>
                     <p className="text-[1.10rem] font-[600]">Todos estos datos serán necesarios para: </p>
                     <span className="text-start place-self-center">
-                        <li>Ofrecerle una experiencia personalizada dentro de WorkIt.</li>
-                        <li>Entregarle seguridad dentro de WorkIt.</li>
-                        <li>Cubrirle a nivel legal con el uso de WorkIt.</li>
+                        <li>Ofrecerle una experiencia personalizada dentro de Emplify.</li>
+                        <li>Entregarle seguridad dentro de Emplify.</li>
+                        <li>Cubrirle a nivel legal con el uso de Emplify.</li>
                     </span>
                     <Link to='/' className="text-Primary text-sm font-semibold place-self-center lg:place-self-start  mt-10">Volver</Link>
                 </span>
@@ -177,7 +177,7 @@ export const RegisterCliente = () => {
                             type="email"
                             label="Correo electrónico"
                             labelPlacement="outside"
-                            placeholder="email@workit.cl"
+                            placeholder="email@emplify.cl"
                             id="txt_email"
                             name="txt_email"
                             ref={txt_email}

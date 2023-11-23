@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button } from "@nextui-org/react"
+import { Input, Button, Image } from "@nextui-org/react"
 import { Link } from "react-router-dom";
 import { Navbar, NavbarBrand } from "@nextui-org/react";
 
@@ -7,8 +7,8 @@ import { Navbar, NavbarBrand } from "@nextui-org/react";
 export const EditarPerfil = () => {
 
   const [trabajos, setTrabajos] = useState([
-    { img: "/trabajo1.png", descripcion: "Descripción del trabajo 1" },
-    { img: "/trabajo1.png", descripcion: "Descripción del trabajo 2" },
+    { img: "https://placehold.jp/350x250.png", descripcion: "Descripción del trabajo 1" },
+    { img: "https://placehold.jp/350x250.png", descripcion: "Descripción del trabajo 2" },
     // ... puedes añadir más trabajos iniciales si es necesario
   ]);
 
@@ -41,7 +41,7 @@ export const EditarPerfil = () => {
       {/* Navbar */}
       <Navbar position="static" className="font-['Robot', sans-serif] flex items-center justify-start w-full">
         <NavbarBrand className="flex-shrink-0">
-          <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.</span></Link>
+          <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Emplify<span className="text-Primary">ify</span></Link>
         </NavbarBrand>
       </Navbar>
 
@@ -207,7 +207,7 @@ export const EditarPerfil = () => {
                       </>
                     ) : (
                       <>
-                        <img src={trabajo.img} alt={trabajo.descripcion} className="w-full h-64 object-cover rounded-md" />
+                        <Image src={trabajo.img} alt={trabajo.descripcion} className="w-full h-64 object-cover rounded-md" />
                         <p className="mt-2 text-black text-center">{trabajo.descripcion}</p>
                       </>
                     )}

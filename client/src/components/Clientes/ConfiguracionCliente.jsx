@@ -189,7 +189,7 @@ return (
     <div className='relative z-10 '>
         <Navbar position="static" className="font-['Robot', sans-serif]  flex items-center justify-start w-full">
             <NavbarBrand className="flex-shrink-0">
-                <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Work<span className="text-Primary">It.</span></Link>
+                <Link to="/" className="font-['Poppins', sans-serif] font-[650] text-[32px]">Emplify<span className="text-Primary">ify</span></Link>
             </NavbarBrand>
         </Navbar>
 

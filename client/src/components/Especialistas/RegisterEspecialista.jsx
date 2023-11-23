@@ -285,7 +285,7 @@ export const RegisterEspecialista = () => {
                                         type="email"
                                         label="Correo electrónico"
                                         labelPlacement="outside"
-                                        placeholder="email@workit.cl"
+                                        placeholder="email@emplify.cl"
                                         id="txt_email"
                                         name="txt_email"
                                         ref={txt_email}

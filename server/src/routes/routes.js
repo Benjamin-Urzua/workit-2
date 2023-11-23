@@ -23,7 +23,12 @@ router.post("/admin/deleteEspecialista", adminController.deleteEspecialista)
 router.post("/especialistas/login", especialistasController.login)
 router.post("/especialistas/register", especialistasController.register)
 router.post("/especialistas/editarPerfil", especialistasController.editarPerfil)
-router.get("/especialistas/getPerfil", especialistasController.getPerfil)
+router.post("/especialistas/getPerfil", especialistasController.getPerfil)
+router.post("/especialistas/getSolicitudesTrabajos", especialistasController.getSolicitudesTrabajos)
+router.post("/especialistas/aceptarTrabajo", especialistasController.aceptarTrabajo)
+router.post("/especialistas/trabajosEnCurso", especialistasController.trabajosEnCurso)
+router.post("/especialistas/trabajosTerminados", especialistasController.trabajosTerminados)
+router.post("/especialistas/finalizarTrabajo", especialistasController.finalizarTrabajo)
 router.post("/especialistas/logout", especialistasController.logout)
 
 //CLIENTES

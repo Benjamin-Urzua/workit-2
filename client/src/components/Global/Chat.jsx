@@ -46,7 +46,7 @@ export const Chat = (params) => {
                     ?
                     <div className={`${showChat} right-[3vw] z-50 bottom-0 bg-Primary text-small text-white font-semibold font-sans w-[21vw] py-1`}>
                         <span className='flex flex-row justify-between px-3'>
-                            <span className='inline-block align-middle'><FontAwesomeIcon className='text-[8px] text-lime-500' icon={faCircle}></FontAwesomeIcon> Benjamin</span>
+                            <span className='inline-block align-middle'><FontAwesomeIcon className='text-[8px] text-lime-500' icon={faCircle}></FontAwesomeIcon> {JSON.parse(localStorage.getItem("perfilEspecialista")).nombres}</span>
                             <span className='inline-block align-middle hover:cursor-pointer' onClick={() => setMinifyChat(false)}><FontAwesomeIcon size='sm' icon={faChevronUp}></FontAwesomeIcon></span>
                         </span>
                     </div>
@@ -55,7 +55,7 @@ export const Chat = (params) => {
                         <div className="h-[52vh] w-[21vw] rounded-t-2xl flex flex-col justify-between border-solid border-x border-default-200">
                             <section className="bg-Primary w-full h-12 rounded-t-2xl flex justify-between items-center ">
                                 <div className="ml-4 text-small text-white font-semibold font-sans">
-                                    <span>Benjamin</span>
+                                    <span>{JSON.parse(localStorage.getItem("perfilEspecialista")).nombres}</span>
                                 </div>
                                 <div className="w-[100%] h-[100%] basis-[15%] rounded-tr-2xl hover:cursor-pointer hover:bg-red-500 " onClick={() => setMinifyChat(true)}>
                                     <FontAwesomeIcon className='m-auto max-w-[100%] mt-3 max-h-[100%] block font-bold ' size='sm' color='white' icon={faX}></FontAwesomeIcon>
